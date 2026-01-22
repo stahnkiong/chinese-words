@@ -28,11 +28,49 @@ declare global {
     recallIndex: number;
     masteryIndex: number;
     isSentenceMode: boolean;
+  startSpeechRecognition: (correct: string) => void;
+    isListening: boolean;
+    lastHeard: string | null;
+    playAudio: (text: string, lang: string) => void;
+    resetMasteryWriter: () => void;
+    hintMasteryWriter: () => void;
+    handleRecallHint: (cn: string) => void;
+    recallHintState: number;
   }
 }
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
+(window as any).playAudio = (text: string, lang: string) => {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.8;
+
+  const voices = window.speechSynthesis.getVoices();
+  
+  // Force Indonesian for Malay as it's often better supported and very similar
+  if (lang === 'ms-MY') {
+    lang = 'id-ID';
+  }
+
+  // Try exact match
+  let selectedVoice = voices.find(v => v.lang === lang);
+
+  // Prefix fallback (e.g. en-US -> en-GB if US missing)
+  if (!selectedVoice) {
+    const shortLang = lang.split('-')[0];
+    selectedVoice = voices.find(v => v.lang.startsWith(shortLang));
+  }
+
+  if (selectedVoice) {
+    utterance.voice = selectedVoice;
+    utterance.lang = selectedVoice.lang;
+  } else {
+    utterance.lang = lang;
+  }
+
+  window.speechSynthesis.speak(utterance);
+};
 // --- UI Components ---
 
 function renderHeader() {
@@ -112,29 +150,62 @@ function renderModuleTabs() {
 
 function renderDiscovery() {
   const { newWords } = getDailyWords(state);
-  const clickedCount = state.completedModules[0] ? 3 : (window as any).discoveryClicks || 0;
+  const clickedCount = state.completedModules[0] ? state.pace : (window as any).discoveryClicks || 0;
 
   return `
     <div class="card max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h2 class="text-2xl font-bold mb-2">New Words</h2>
-      <p class="text-slate-500 mb-6">Click each word to see what it looks like!</p>
+      <p class="text-slate-500 mb-6">Explore the meanings and pronunciations.</p>
       
       <div class="grid gap-4">
         ${newWords.map((w, i) => `
           <div 
-            class="flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer ${((window as any).clickedWords?.[i]) ? 'border-green-500 bg-green-50' : 'border-slate-100 hover:border-indigo-300'}"
-            onclick="window.handleWordClick('${w.cn}', ${i})"
+            class="flex flex-col p-6 rounded-2xl border-2 transition-all ${((window as any).clickedWords?.[i]) ? 'border-green-500 bg-green-50' : 'border-slate-100 bg-white shadow-sm'}"
           >
-            <div>
-              <div class="text-3xl font-bold mb-1">${w.cn}</div>
-              <div class="text-sm text-slate-500">${w.pinyin} • ${w.en}</div>
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <div class="text-4xl font-extrabold text-indigo-900 mb-1 tracking-tight">${w.cn}</div>
+                  <button class="p-2 rounded-full bg-indigo-50 text-indigo-600 hover:bg-indigo-100" onclick="window.playAudio('${w.cn}', 'zh-CN')">🔊</button>
+                </div>
+                ${w.pinyin ? `<div class="text-sm font-mono text-indigo-400">/${w.pinyin}/</div>` : ''}
+              </div>
+              <div class="text-2xl">${((window as any).clickedWords?.[i]) ? '✅' : '🖼️'}</div>
             </div>
-            <div class="text-2xl">${((window as any).clickedWords?.[i]) ? '✅' : '🖼️'}</div>
+
+            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+            <div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Bahasa Melayu</div>
+                <div class="flex items-center gap-2">
+                  <div class="text-xl font-bold text-slate-800">${w.bm || '-'}</div>
+                  ${w.bm ? `<button class="p-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200" onclick="window.playAudio('${w.bm}', 'ms-MY')">🔊</button>` : ''}
+                </div>
+                ${w.bm_pronounce ? `<div class="text-sm text-slate-500 italic">${w.bm_pronounce}</div>` : ''}
+              </div>  
+            <div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">English</div>
+                <div class="flex items-center gap-2">
+                  <div class="text-xl font-bold text-slate-800">${w.en}</div>
+                  <button class="p-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200" onclick="window.playAudio('${w.en}', 'en-US')">🔊</button>
+                </div>
+                <div class="text-sm text-slate-500">${w.en_pronounce}</div>
+              </div>
+              
+              
+            </div>
+
+            <button 
+              class="mt-4 w-full py-2 flex items-center justify-center gap-2 rounded-xl border-2 border-indigo-100 bg-indigo-50 text-indigo-700 font-bold hover:bg-indigo-100 active:scale-95 transition-all"
+              onclick="window.handleWordClick('${w.cn}', ${i})"
+            >
+              <span>View Images</span>
+              <span>🖼️</span>
+            </button>
           </div>
         `).join('')}
       </div>
 
-      ${clickedCount >= 3 ? `
+      ${clickedCount >= state.pace ? `
         <button class="btn-primary w-full mt-8" onclick="window.completeModule(0)">
           Finish Discovery
         </button>
@@ -156,6 +227,7 @@ function renderStructure() {
 
   const currentWordIndex = (window as any).structureIndex || 0;
   const word = review1[currentWordIndex];
+  const characters = word.cn.split('');
 
   return `
     <div class="card max-w-2xl mx-auto">
@@ -163,10 +235,26 @@ function renderStructure() {
       <p class="text-slate-500 mb-6">Draw the character correctly!</p>
       
       <div class="flex flex-col items-center gap-6">
-        <div id="hanzi-target" class="border-4 border-indigo-100 rounded-2xl bg-slate-50"></div>
-        <div class="text-center">
-          <div class="text-xl font-bold">${word.pinyin}</div>
-          <div class="text-slate-500">${word.en}</div>
+        <div class="flex flex-wrap justify-center gap-4">
+          ${characters.map((_, i) => `
+            <div id="hanzi-target-${i}" class="border-4 border-indigo-100 rounded-2xl bg-slate-50"></div>
+          `).join('')}
+        </div>
+        <div class="flex flex-col items-center gap-3">
+          <div class="flex items-center gap-2">
+            <div class="text-xl font-bold">${word.pinyin}</div>
+            <button class="p-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200" onclick="window.playAudio('${word.cn}', 'zh-CN')">🔊</button>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <div class="text-lg font-bold text-slate-700">${word.bm || '-'}</div>
+            ${word.bm ? `<button class="p-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200" onclick="window.playAudio('${word.bm}', 'ms-MY')">🔊</button>` : ''}
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="text-lg font-bold text-slate-700">${word.en}</div>
+            <button class="p-1 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200" onclick="window.playAudio('${word.en}', 'en-US')">🔊</button>
+          </div>
         </div>
         
         <div class="flex gap-2 w-full">
@@ -195,27 +283,37 @@ function renderRecall() {
 
   const currentWordIndex = (window as any).recallIndex || 0;
   const word = review2[currentWordIndex];
-  // Shuffle options
-  const options = [...review2].sort(() => Math.random() - 0.5);
+  const listening = (window as any).isListening || false;
+  const lastHeard = (window as any).lastHeard || null;
 
   return `
     <div class="card max-w-2xl mx-auto">
       <h2 class="text-2xl font-bold mb-2">Recall Quiz</h2>
-      <p class="text-slate-500 mb-6">Choose the correct Chinese word.</p>
+      <p class="text-slate-500 mb-6">Say the Chinese word!</p>
       
       <div class="text-center mb-10">
-        <div class="text-4xl font-bold text-indigo-600">${word.en}</div>
-      </div>
+        <div class="flex flex-col items-center gap-2 mb-8">
+          <div class="text-4xl font-bold text-indigo-600">${word.en}</div>
+          <div class="text-2xl font-bold text-slate-500">${word.bm || ''}</div>
+        </div>
+        
+        <button 
+          class="w-24 h-24 rounded-full flex items-center justify-center mx-auto transition-all ${listening ? 'bg-red-500 animate-pulse ring-4 ring-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200'}"
+          onclick="window.startSpeechRecognition('${word.cn}')"
+        >
+          <span class="text-4xl">🎙️</span>
+        </button>
 
-      <div class="grid gap-3">
-        ${options.map(opt => `
-          <button 
-            class="p-4 rounded-xl border-2 border-slate-100 hover:border-indigo-300 text-xl font-bold transition-all active:scale-95"
-            onclick="window.handleRecallChoice('${opt.cn}', '${word.cn}')"
-          >
-            ${opt.cn}
-          </button>
-        `).join('')}
+        <div class="mt-8 h-8 text-lg font-medium text-slate-500 mb-4">
+          ${listening ? 'Listening...' : (lastHeard ? `Heard: "${lastHeard}" - Try again!` : 'Tap to speak')}
+        </div>
+
+        <button 
+          class="mt-4 py-2 px-6 rounded-full bg-indigo-50 text-indigo-600 font-bold hover:bg-indigo-100 transition-all flex items-center gap-2 mx-auto"
+          onclick="window.handleRecallHint('${word.cn}')"
+        >
+          <span>${getRecallHintText(word)}</span>
+        </button>
       </div>
 
       <div class="mt-8 flex justify-between items-center">
@@ -243,7 +341,7 @@ function renderMastery() {
   return `
     <div class="card max-w-2xl mx-auto">
       <h2 class="text-2xl font-bold mb-2">Mastery</h2>
-      <p class="text-slate-500 mb-6">${isSentenceMode ? 'Say it out loud!' : 'Write the Chinese word.'}</p>
+      <p class="text-slate-500 mb-6">${isSentenceMode ? 'Say it out loud!' : 'Write the Chinese word (Blind Mode).'}</p>
       
       <div class="text-center mb-8">
         <div class="text-4xl font-bold text-indigo-600 mb-2">${word.en}</div>
@@ -251,15 +349,16 @@ function renderMastery() {
       </div>
 
       ${!isSentenceMode ? `
-        <div class="space-y-4">
-          <input 
-            type="text" 
-            id="mastery-input" 
-            class="w-full p-4 text-2xl text-center font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-500 outline-none"
-            placeholder="输入中文"
-            autofocus
-          />
-          <button class="btn-primary w-full" onclick="window.checkMasteryInput('${word.cn}')">Check</button>
+        <div class="flex flex-col items-center gap-6">
+          <div class="flex flex-wrap justify-center gap-4">
+            ${word.cn.split('').map((_, i) => `
+              <div id="hanzi-mastery-target-${i}" class="border-4 border-indigo-100 rounded-2xl bg-slate-50"></div>
+            `).join('')}
+          </div>
+          <div class="flex gap-2 w-full max-w-md">
+            <button class="flex-1 py-2 bg-slate-100 rounded-lg text-sm font-bold" onclick="window.resetMasteryWriter()">Reset</button>
+            <button class="flex-1 py-2 bg-slate-100 rounded-lg text-sm font-bold" onclick="window.hintMasteryWriter()">Hint</button>
+          </div>
         </div>
       ` : `
         <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 text-center mb-8">
@@ -333,6 +432,7 @@ function render() {
   `;
 
   if (currentModuleIndex === 1) initHanziWriter();
+  if (currentModuleIndex === 3) initMasteryWriter();
   setupLongPress();
 }
 
@@ -373,77 +473,243 @@ function render() {
 };
 
 // Structure Handlers
-let writer: any = null;
+let writers: any[] = [];
+let activeWriterIndex = 0;
+
 function initHanziWriter() {
   const { review1 } = getDailyWords(state);
   const index = (window as any).structureIndex || 0;
   if (!review1[index]) return;
 
-  const target = document.getElementById('hanzi-target');
-  if (!target) return;
-  target.innerHTML = '';
+  writers = [];
+  activeWriterIndex = 0;
+  const characters = review1[index].cn.split('');
 
-  writer = (window as any).HanziWriter.create('hanzi-target', review1[index].cn, {
-    width: 250,
-    height: 250,
-    showCharacter: false,
-    padding: 5,
-    strokeAnimationSpeed: 1,
-    delayBetweenStrokes: 200
+  characters.forEach((char, i) => {
+    const targetId = `hanzi-target-${i}`;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    target.innerHTML = '';
+
+    const writer = (window as any).HanziWriter.create(targetId, char, {
+      width: 250,
+      height: 250,
+      showCharacter: false,
+      padding: 5,
+      strokeAnimationSpeed: 1,
+      delayBetweenStrokes: 200
+    });
+    writers.push(writer);
   });
 
-  writer.quiz({
+  startNextQuiz(review1, index);
+}
+
+function startNextQuiz(review1: any[], wordIndex: number) {
+  if (activeWriterIndex >= writers.length) {
+    // Word Complete
+    (window as any).confetti({ particleCount: 50, spread: 60 });
+    setTimeout(() => {
+      const nextIndex = wordIndex + 1;
+      if (nextIndex >= review1.length) {
+        (window as any).structureIndex = 0;
+        window.completeModule(1);
+      } else {
+        (window as any).structureIndex = nextIndex;
+        render();
+      }
+    }, 1000);
+    return;
+  }
+
+  writers[activeWriterIndex].quiz({
     onComplete: () => {
-      (window as any).confetti({ particleCount: 50, spread: 60 });
-      setTimeout(() => {
-        const nextIndex = index + 1;
-        if (nextIndex >= review1.length) {
-          (window as any).structureIndex = 0;
-          window.completeModule(1);
-        } else {
-          (window as any).structureIndex = nextIndex;
-          render();
-        }
-      }, 1000);
+      activeWriterIndex++;
+      startNextQuiz(review1, wordIndex);
     }
   });
 }
 
-(window as any).resetWriter = () => writer?.quiz();
-(window as any).hintWriter = () => writer?.animateCharacter();
+(window as any).resetWriter = () => {
+  if (writers[activeWriterIndex]) {
+    writers[activeWriterIndex].quiz();
+  }
+};
+(window as any).hintWriter = () => {
+  if (writers[activeWriterIndex]) {
+    writers[activeWriterIndex].animateCharacter();
+  }
+};
 
 // Recall Handlers
 (window as any).recallIndex = 0;
-(window as any).handleRecallChoice = (choice: string, correct: string) => {
-  if (choice === correct) {
-    (window as any).confetti({ particleCount: 30 });
-    const { review2 } = getDailyWords(state);
-    const nextIndex = ((window as any).recallIndex || 0) + 1;
+(window as any).isListening = false;
+(window as any).lastHeard = null;
+
+(window as any).startSpeechRecognition = (correct: string) => {
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech recognition not supported in this browser. Try Chrome!");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'zh-CN';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    (window as any).isListening = true;
+    (window as any).lastHeard = null;
+    render();
+  };
+
+  recognition.onresult = (event: any) => {
+    let transcript = event.results[0][0].transcript;
+    (window as any).isListening = false;
     
-    if (nextIndex >= review2.length) {
-      (window as any).recallIndex = 0;
-      window.completeModule(2);
+    // Normalize digits to Chinese characters
+    const digitMap: Record<string, string> = {
+      '0': '零', '1': '一', '2': '二', '3': '三', '4': '四',
+      '5': '五', '6': '六', '7': '七', '8': '八', '9': '九'
+    };
+    
+    // Replace all digits in transcript with Chinese chars
+    transcript = transcript.replace(/\d/g, (d: string) => digitMap[d] || d);
+
+    // Simple matching (ignore punctuation)
+    if (transcript.includes(correct) || correct.includes(transcript)) {
+      (window as any).lastHeard = transcript; // Show it briefly? Or just success
+      (window as any).confetti({ particleCount: 30 });
+      
+      const { review2 } = getDailyWords(state);
+      const nextIndex = ((window as any).recallIndex || 0) + 1;
+      
+      setTimeout(() => {
+        (window as any).lastHeard = null;
+        (window as any).recallHintState = 0; // Reset hint state
+        if (nextIndex >= review2.length) {
+          (window as any).recallIndex = 0;
+          window.completeModule(2);
+        } else {
+          (window as any).recallIndex = nextIndex;
+          render();
+        }
+      }, 1000); // Delay to see success
     } else {
-      (window as any).recallIndex = nextIndex;
+      (window as any).lastHeard = transcript;
       render();
     }
-  } else {
-    alert("Try again!");
+  };
+
+  recognition.onerror = (event: any) => {
+    console.error("Speech Recognition Error", event.error);
+    (window as any).isListening = false;
+    (window as any).lastHeard = "Error: " + event.error;
+    render();
+  };
+
+  recognition.onend = () => {
+    if ((window as any).isListening) {
+      (window as any).isListening = false;
+      render();
+    }
+  };
+
+  recognition.start();
+};
+
+function getRecallHintText(word: any) {
+  const state = (window as any).recallHintState || 0;
+  if (state === 0) return "Need a hint? 💡";
+  if (state === 1) return word.cn; // Show Chinese characters
+  if (state >= 2) return `🔊 ${word.pinyin}`; // Show Pinyin and allow audio
+}
+
+(window as any).recallHintState = 0;
+(window as any).handleRecallHint = (correctCn: string) => {
+  const currentState = (window as any).recallHintState || 0;
+  
+  if (currentState === 0) {
+    (window as any).recallHintState = 1;
+    render();
+  } else if (currentState === 1) {
+    (window as any).recallHintState = 2;
+    render();
+  } else if (currentState >= 2) {
+    // Play audio
+    (window as any).playAudio(correctCn, 'zh-CN');
   }
 };
 
 // Mastery Handlers
 (window as any).masteryIndex = 0;
 (window as any).isSentenceMode = false;
-(window as any).checkMasteryInput = (correct: string) => {
-  const input = document.getElementById('mastery-input') as HTMLInputElement;
-  if (input.value.trim() === correct) {
-    (window as any).isSentenceMode = true;
-    render();
-  } else {
-    alert("Not quite! Check your spelling.");
+
+let masteryWriters: any[] = [];
+let activeMasteryWriterIndex = 0;
+
+function initMasteryWriter() {
+  const { review3 } = getDailyWords(state);
+  const index = (window as any).masteryIndex || 0;
+  if (!review3[index] || (window as any).isSentenceMode) return;
+
+  masteryWriters = [];
+  activeMasteryWriterIndex = 0;
+  const characters = review3[index].cn.split('');
+
+  characters.forEach((char, i) => {
+    const targetId = `hanzi-mastery-target-${i}`;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+    target.innerHTML = '';
+
+    const writer = (window as any).HanziWriter.create(targetId, char, {
+      width: 250,
+      height: 250, // Slightly smaller for mastery maybe? No, keep consist
+      showCharacter: false,
+      showOutline: false, // Hidden stroke mode!
+      padding: 5,
+      strokeAnimationSpeed: 1,
+      delayBetweenStrokes: 200
+    });
+    masteryWriters.push(writer);
+  });
+
+  startNextMasteryQuiz();
+}
+
+function startNextMasteryQuiz() {
+  if (activeMasteryWriterIndex >= masteryWriters.length) {
+    // Word Complete -> Go to Sentence Mode
+    (window as any).confetti({ particleCount: 50, spread: 60 });
+    setTimeout(() => {
+       (window as any).isSentenceMode = true;
+       render();
+    }, 1000);
+    return;
+  }
+
+  masteryWriters[activeMasteryWriterIndex].quiz({
+    onComplete: () => {
+      activeMasteryWriterIndex++;
+      startNextMasteryQuiz();
+    }
+  });
+}
+
+(window as any).resetMasteryWriter = () => {
+  if (masteryWriters[activeMasteryWriterIndex]) {
+    masteryWriters[activeMasteryWriterIndex].quiz();
   }
 };
+(window as any).hintMasteryWriter = () => {
+  if (masteryWriters[activeMasteryWriterIndex]) {
+    masteryWriters[activeMasteryWriterIndex].animateCharacter();
+  }
+};
+
+
 
 (window as any).nextMasteryWord = () => {
   const { review3 } = getDailyWords(state);
