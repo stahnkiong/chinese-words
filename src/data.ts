@@ -148,4 +148,73 @@ export const ALL_WORDS: Word[] = [
   { cn: "题目", en: "Topic", pinyin: "tí mù", parts: ["目"], bm: "Tajuk", en_pronounce: "ˈtɒp.ɪk", bm_pronounce: "ta-juk" },
   { cn: "节目", en: "Program", pinyin: "jié mù", parts: ["目"], bm: "Program", en_pronounce: "ˈproʊ.ɡræm", bm_pronounce: "pro-gram" },
   { cn: "目录", en: "Catalog", pinyin: "mù lù", parts: ["目"], bm: "Katalog", en_pronounce: "ˈkæt.əl.ɒɡ", bm_pronounce: "ka-ta-log" },
+  // Root: 石 (Stone)
+  { cn: "石头", en: "Stone", pinyin: "shí tou", parts: ["石"], bm: "Batu", en_pronounce: "stoʊn", bm_pronounce: "ba-tu" },
+  { cn: "石油", en: "Petroleum", pinyin: "shí yóu", parts: ["石"], bm: "Petroleum", en_pronounce: "pəˈtroʊ.li.əm", bm_pronounce: "pe-tro-li-um" },
+  { cn: "宝石", en: "Gem", pinyin: "bǎo shí", parts: ["石"], bm: "Permata", en_pronounce: "dʒɛm", bm_pronounce: "per-ma-ta" },
+  { cn: "化石", en: "Fossil", pinyin: "huà shí", parts: ["石"], bm: "Fosil", en_pronounce: "ˈfɒs.əl", bm_pronounce: "fo-sil" },
+  { cn: "磁石", en: "Magnet", pinyin: "cí shí", parts: ["石"], bm: "Magnet", en_pronounce: "ˈmæɡ.nɪt", bm_pronounce: "mag-net" },
+
+  // Root: 田 (Field)
+  { cn: "田地", en: "Field", pinyin: "tián dì", parts: ["田"], bm: "Ladang", en_pronounce: "jiːld", bm_pronounce: "la-dang" },
+  { cn: "种田", en: "Farming", pinyin: "zhòng tián", parts: ["田"], bm: "Bercucuk tanam", en_pronounce: "ˈfɑːr.mɪŋ", bm_pronounce: "ber-cu-cuk ta-nam" },
+  { cn: "田野", en: "Countryside", pinyin: "tián yě", parts: ["田"], bm: "Luar bandar", en_pronounce: "ˈkʌn.tri.saɪd", bm_pronounce: "lu-ar ban-dar" },
+  { cn: "稻田", en: "Paddy field", pinyin: "dào tián", parts: ["田"], bm: "Sawah padi", en_pronounce: "ˈpæd.i jiːld", bm_pronounce: "sa-wah pa-di" },
+  { cn: "油田", en: "Oilfield", pinyin: "yóu tián", parts: ["田"], bm: "Ladang minyak", en_pronounce: "ˈɔɪl.jiːld", bm_pronounce: "la-dang mi-nyak" },
+
+  // Root: 电 (Electricity)
+  { cn: "电话", en: "Telephone", pinyin: "diàn huà", parts: ["电"], bm: "Telefon", en_pronounce: "ˈtɛl.ɪ.foʊn", bm_pronounce: "te-le-fon" },
+  { cn: "电脑", en: "Computer", pinyin: "diàn nǎo", parts: ["电"], bm: "Komputer", en_pronounce: "kəmˈpjuː.tər", bm_pronounce: "kom-pu-ter" },
+  { cn: "电视", en: "Television", pinyin: "diàn shì", parts: ["电"], bm: "Televisyen", en_pronounce: "ˈtɛl.ə.vɪʒ.ən", bm_pronounce: "te-le-vi-syen" },
+  { cn: "电影", en: "Movie", pinyin: "diàn yǐng", parts: ["电"], bm: "Filem", en_pronounce: "ˈmuː.vi", bm_pronounce: "fi-lem" },
+  { cn: "电池", en: "Battery", pinyin: "diàn chí", parts: ["电"], bm: "Bateri", en_pronounce: "ˈbæt.ər.i", bm_pronounce: "ba-te-ri" },
+
+  // Root: 火 (Fire)
+  { cn: "火锅", en: "Hotpot", pinyin: "huǒ guō", parts: ["火"], bm: "Kuali panas", en_pronounce: "hɒt.pɒt", bm_pronounce: "ku-a-li pa-nas" },
+  { cn: "火苗", en: "Flame", pinyin: "huǒ miáo", parts: ["火"], bm: "Nyalaan api", en_pronounce: "fleɪm", bm_pronounce: "nya-la-an a-pi" },
+  { cn: "大火", en: "Big fire", pinyin: "dà huǒ", parts: ["火"], bm: "Api besar", en_pronounce: "bɪɡ faɪər", bm_pronounce: "a-pi be-sar" },
+  { cn: "灭火", en: "Extinguish fire", pinyin: "miè huǒ", parts: ["火"], bm: "Padam api", en_pronounce: "ɪkˈstɪŋ.ɡwɪʃ faɪər", bm_pronounce: "pa-dam a-pi" },
+  { cn: "火把", en: "Torch", pinyin: "huǒ bǎ", parts: ["火"], bm: "Obor", en_pronounce: "tɔːrtʃ", bm_pronounce: "o-bor" },
+
+  // Root: 耳 (Ear)
+  { cn: "耳朵", en: "Ear", pinyin: "ěr duo", parts: ["耳"], bm: "Telinga", en_pronounce: "ɪər", bm_pronounce: "te-li-nga" },
+  { cn: "耳机", en: "Headphones", pinyin: "ěr jī", parts: ["耳"], bm: "Fon kepala", en_pronounce: "ˈhɛd.foʊnz", bm_pronounce: "fon ke-pa-la" },
+  { cn: "木耳", en: "Wood ear", pinyin: "mù ěr", parts: ["耳"], bm: "Kulat telinga kera", en_pronounce: "wʊd ɪər", bm_pronounce: "ku-lat te-li-nga ke-ra" },
+  { cn: "刺耳", en: "Piercing", pinyin: "cì ěr", parts: ["耳"], bm: "Menyakitkan telinga", en_pronounce: "ˈpɪər.sɪŋ", bm_pronounce: "me-nya-kit-kan te-li-nga" },
+  { cn: "悦耳", en: "Melodious", pinyin: "yuè ěr", parts: ["耳"], bm: "Merdu", en_pronounce: "məˈloʊ.di.əs", bm_pronounce: "mer-du" },
+
+  // Root: 雨 (Rain)
+  { cn: "下雨", en: "Raining", pinyin: "xià yǔ", parts: ["雨"], bm: "Hujan", en_pronounce: "ˈreɪ.nɪŋ", bm_pronounce: "hu-jan" },
+  { cn: "雨衣", en: "Raincoat", pinyin: "yǔ yī", parts: ["雨"], bm: "Baju hujan", en_pronounce: "ˈreɪn.koʊt", bm_pronounce: "ba-ju hu-jan" },
+  { cn: "雨伞", en: "Umbrella", pinyin: "yǔ sǎn", parts: ["雨"], bm: "Payung", en_pronounce: "ʌmˈbrɛl.ə", bm_pronounce: "pa-yung" },
+  { cn: "风雨", en: "Wind and rain", pinyin: "fēng yǔ", parts: ["雨"], bm: "Angin dan hujan", en_pronounce: "wɪnd ənd reɪn", bm_pronounce: "a-ngin dan hu-jan" },
+  { cn: "暴雨", en: "Rainstorm", pinyin: "bào yǔ", parts: ["雨"], bm: "Ribut hujan", en_pronounce: "ˈreɪn.stɔːrm", bm_pronounce: "ri-but hu-jan" },
+
+  // Root: 车 (Car)
+  { cn: "汽车", en: "Car", pinyin: "qì chē", parts: ["车"], bm: "Kereta", en_pronounce: "kɑːr", bm_pronounce: "ke-re-ta" },
+  { cn: "车站", en: "Station", pinyin: "chē zhàn", parts: ["车"], bm: "Stesen", en_pronounce: "ˈsteɪ.ʃən", bm_pronounce: "ste-sen" },
+  { cn: "马车", en: "Carriage", pinyin: "mǎ chē", parts: ["车"], bm: "Kereta kuda", en_pronounce: "ˈkær.ɪdʒ", bm_pronounce: "ke-re-ta ku-da" },
+  { cn: "卡车", en: "Truck", pinyin: "kǎ chē", parts: ["车"], bm: "Lori", en_pronounce: "trʌk", bm_pronounce: "lo-ri" },
+  { cn: "跑车", en: "Sports car", pinyin: "pǎo chē", parts: ["车"], bm: "Kereta sukan", en_pronounce: "spɔːrts kɑːr", bm_pronounce: "ke-re-ta su-kan" },
+
+  // Root: 马 (Horse)
+  { cn: "马路", en: "Road", pinyin: "mǎ lù", parts: ["马"], bm: "Jalan raya", en_pronounce: "roʊd", bm_pronounce: "ja-lan ra-ya" },
+  { cn: "马上", en: "Immediately", pinyin: "mǎ shàng", parts: ["马"], bm: "Segera", en_pronounce: "ɪˈmiː.di.ət.li", bm_pronounce: "se-ge-ra" },
+  { cn: "木马", en: "Wooden horse", pinyin: "mù mǎ", parts: ["马"], bm: "Kuda kayu", en_pronounce: "ˈwʊd.ən hɔːrs", bm_pronounce: "ku-da ka-yu" },
+  { cn: "斑马", en: "Zebra", pinyin: "bān mǎ", parts: ["马"], bm: "Kuda belang", en_pronounce: "ˈziː.brə", bm_pronounce: "ku-da be-lang" },
+  { cn: "海马", en: "Seahorse", pinyin: "hǎi mǎ", parts: ["马"], bm: "Kuda laut", en_pronounce: "ˈsiː.hɔːrs", bm_pronounce: "ku-da la-ut" },
+
+  // Root: 足 (Foot)
+  { cn: "足球", en: "Soccer", pinyin: "zú qiú", parts: ["足"], bm: "Bola sepak", en_pronounce: "ˈsɒk.ər", bm_pronounce: "bo-la se-pak" },
+  { cn: "手足", en: "Siblings", pinyin: "shǒu zú", parts: ["足"], bm: "Adik-beradik", en_pronounce: "ˈsɪb.lɪŋz", bm_pronounce: "a-dik be-ra-dik" },
+  { cn: "远足", en: "Hiking", pinyin: "yuǎn zú", parts: ["足"], bm: "Mengembara", en_pronounce: "ˈhaɪ.kɪŋ", bm_pronounce: "me-ngem-ba-ra" },
+  { cn: "足够", en: "Enough", pinyin: "zú gòu", parts: ["足"], bm: "Cukup", en_pronounce: "ɪˈnʌf", bm_pronounce: "cu-kup" },
+  { cn: "满足", en: "Satisfied", pinyin: "mǎn zú", parts: ["足"], bm: "Puas hati", en_pronounce: "ˈsæt.ɪs.faɪd", bm_pronounce: "pu-as ha-ti" },
+
+  // Root: 门 (Door)
+  { cn: "大门", en: "Main gate", pinyin: "dà mén", parts: ["门"], bm: "Pintu pagar", en_pronounce: "meɪn ɡeɪt", bm_pronounce: "pin-tu pa-gar" },
+  { cn: "开门", en: "Open door", pinyin: "kāi mén", parts: ["门"], bm: "Buka pintu", en_pronounce: "ˈoʊ.pən dɔːr", bm_pronounce: "bu-ka pin-tu" },
+  { cn: "关门", en: "Close door", pinyin: "guān mén", parts: ["门"], bm: "Tutup pintu", en_pronounce: "kloʊs dɔːr", bm_pronounce: "tu-tup pin-tu" },
+  { cn: "出门", en: "Go out", pinyin: "chū mén", parts: ["门"], bm: "Keluar", en_pronounce: "ɡoʊ aʊt", bm_pronounce: "ke-lu-ar" },
+  { cn: "门票", en: "Ticket", pinyin: "mén piào", parts: ["门"], bm: "Tiket", en_pronounce: "ˈtɪk.ɪt", bm_pronounce: "ti-ket" }
 ];

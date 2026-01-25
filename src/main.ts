@@ -1,6 +1,7 @@
 import './style.css';
 import { loadState, saveState, getDailyWords, exportState, importState } from './logic';
 import type { AppState } from './logic';
+import { ALL_WORDS } from './data';
 
 let state: AppState = loadState();
 let currentModuleIndex = 0;
@@ -28,7 +29,7 @@ declare global {
     recallIndex: number;
     masteryIndex: number;
     isSentenceMode: boolean;
-  startSpeechRecognition: (correct: string) => void;
+    startSpeechRecognition: (correct: string) => void;
     isListening: boolean;
     lastHeard: string | null;
     playAudio: (text: string, lang: string) => void;
@@ -129,17 +130,21 @@ function renderModuleTabs() {
     { name: 'Mastery', icon: '🏆' }
   ];
 
+  if (state.currentStudyDay >= 15) {
+    modules.push({ name: 'Library', icon: '📚' });
+  }
+
   return `
     <div class="flex gap-2 px-6 max-w-2xl mx-auto mb-8 overflow-x-auto pb-2 no-scrollbar">
       ${modules.map((m, i) => `
         <button 
           class="flex-1 min-w-[100px] flex flex-col items-center gap-1 p-3 rounded-2xl transition-all ${currentModuleIndex === i ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-white text-slate-500 border border-slate-100'}"
           onclick="window.setModule(${i})"
-          ${i > 0 && !state.completedModules[i-1] ? 'disabled opacity-50' : ''}
+          ${(i < 4 && i > 0 && !state.completedModules[i-1]) ? 'disabled opacity-50' : ''}
         >
           <span class="text-xl">${m.icon}</span>
           <span class="text-xs font-bold uppercase tracking-tighter">${m.name}</span>
-          ${state.completedModules[i] ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
+          ${(i < 4 && state.completedModules[i]) ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
         </button>
       `).join('')}
     </div>
@@ -374,6 +379,53 @@ function renderMastery() {
   `;
 }
 
+function renderLibrary() {
+  const masteredCount = Math.max(0, (state.currentStudyDay - 15) * state.pace);
+  const masteredWords = ALL_WORDS.slice(0, masteredCount).reverse();
+
+  return `
+    <div class="card max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <h2 class="text-2xl font-bold mb-2">Mastered Words</h2>
+      <p class="text-slate-500 mb-6">Review all the words you have mastered.</p>
+      
+      ${masteredWords.length === 0 ? `
+        <div class="text-center py-12 text-slate-400">
+          <div class="text-4xl mb-4">🌱</div>
+          <p>No mastered words yet. Keep going!</p>
+        </div>
+      ` : `
+        <div class="grid gap-3">
+          ${masteredWords.map((w, i) => `
+            <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-100 hover:shadow-md transition-all">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg text-xl font-bold text-indigo-700">
+                  ${w.cn}
+                </div>
+                <div>
+                  <div class="font-bold text-slate-800">${w.en}</div>
+                  <div class="text-xs text-slate-400 font-mono">/${w.pinyin}/</div>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <div class="text-right hidden sm:block">
+                  <div class="text-sm font-bold text-slate-600">${w.bm || '-'}</div>
+                </div>
+                <button 
+                  class="p-2 rounded-full bg-slate-50 text-indigo-600 hover:bg-slate-100"
+                  onclick="window.playAudio('${w.cn}', 'zh-CN')"
+                >
+                  🔊
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+
 function renderSettings() {
   return `
     <div id="settings-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm items-center justify-center p-6 hidden">
@@ -406,7 +458,13 @@ function renderSettings() {
 }
 
 function renderFinishDay() {
-  const allDone = state.completedModules.every(m => m);
+  const allDone = state.completedModules.every((completed, index) => {
+    // Only check first 4 modules (Discovery, Structure, Recall, Mastery)
+    // Library (index 4) doesn't need to be completed
+    if (index >= 4) return true;
+    return completed;
+  });
+  
   if (!allDone) return '';
 
   return `
@@ -421,11 +479,24 @@ function renderFinishDay() {
 // --- Main Render Loop ---
 
 function render() {
+  // If we are on the Library tab (index 4) but logic doesn't support it (e.g. day < 15), reset to 0
+  if (currentModuleIndex === 4 && state.currentStudyDay < 15) {
+    currentModuleIndex = 0;
+  }
+
+  const moduleRenderers = [
+    renderDiscovery, 
+    renderStructure, 
+    renderRecall, 
+    renderMastery,
+    renderLibrary
+  ];
+
   app.innerHTML = `
     ${renderHeader()}
     ${renderModuleTabs()}
     <main class="px-6 pb-12">
-      ${[renderDiscovery, renderStructure, renderRecall, renderMastery][currentModuleIndex]()}
+      ${(moduleRenderers[currentModuleIndex] || renderDiscovery)()}
     </main>
     ${renderFinishDay()}
     ${renderSettings()}
@@ -439,7 +510,9 @@ function render() {
 // --- Logic & Handlers ---
 
 (window as any).setModule = (index: number) => {
-  if (index > 0 && !state.completedModules[index-1]) return;
+  // Library (index 4) is always accessible if visible, no dependency on previous modules
+  if (index < 4 && index > 0 && !state.completedModules[index-1]) return;
+  
   currentModuleIndex = index;
   render();
 };
