@@ -395,7 +395,7 @@ function renderLibrary() {
         </div>
       ` : `
         <div class="grid gap-3">
-          ${masteredWords.map((w, i) => `
+          ${masteredWords.map((w) => `
             <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-100 hover:shadow-md transition-all">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg text-xl font-bold text-indigo-700">
