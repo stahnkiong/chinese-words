@@ -29,7 +29,7 @@ declare global {
     recallIndex: number;
     masteryIndex: number;
     isSentenceMode: boolean;
-    startSpeechRecognition: (correct: string) => void;
+
     isListening: boolean;
     lastHeard: string | null;
     playAudio: (text: string, lang: string) => void;
@@ -37,8 +37,12 @@ declare global {
     hintMasteryWriter: () => void;
     handleRecallHint: (cn: string) => void;
     recallHintState: number;
+    toggleSpeechRecognition: (correct: string) => void;
   }
 }
+
+let activeRecognition: any = null;
+let recognitionTimeout: any = null;
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -178,7 +182,7 @@ function renderDiscovery() {
               <div class="text-2xl">${((window as any).clickedWords?.[i]) ? '✅' : '🖼️'}</div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+            <div class="grid grid-cols-1 gap-4 pt-4 border-t border-slate-100">
             <div>
                 <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Bahasa Melayu</div>
                 <div class="flex items-center gap-2">
@@ -304,9 +308,9 @@ function renderRecall() {
         
         <button 
           class="w-24 h-24 rounded-full flex items-center justify-center mx-auto transition-all ${listening ? 'bg-red-500 animate-pulse ring-4 ring-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200'}"
-          onclick="window.startSpeechRecognition('${word.cn}')"
+          onclick="window.toggleSpeechRecognition('${word.cn}')"
         >
-          <span class="text-4xl">🎙️</span>
+          <span class="text-4xl">${listening ? '⏹️' : '🎙️'}</span>
         </button>
 
         <div class="mt-8 h-8 text-lg font-medium text-slate-500 mb-4">
@@ -619,7 +623,12 @@ function startNextQuiz(review1: any[], wordIndex: number) {
 (window as any).isListening = false;
 (window as any).lastHeard = null;
 
-(window as any).startSpeechRecognition = (correct: string) => {
+(window as any).toggleSpeechRecognition = (correct: string) => {
+  if ((window as any).isListening && activeRecognition) {
+    activeRecognition.stop();
+    return;
+  }
+
   const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
   if (!SpeechRecognition) {
     alert("Speech recognition not supported in this browser. Try Chrome!");
@@ -629,49 +638,47 @@ function startNextQuiz(review1: any[], wordIndex: number) {
   const recognition = new SpeechRecognition();
   recognition.lang = 'zh-CN';
   recognition.continuous = false;
-  recognition.interimResults = false;
+  recognition.interimResults = true;
+  activeRecognition = recognition;
 
   recognition.onstart = () => {
     (window as any).isListening = true;
     (window as any).lastHeard = null;
     render();
+
+    // Auto stop after 4 seconds
+    if (recognitionTimeout) clearTimeout(recognitionTimeout);
+    recognitionTimeout = setTimeout(() => {
+      if (activeRecognition === recognition) {
+        recognition.stop();
+      }
+    }, 4000);
   };
 
   recognition.onresult = (event: any) => {
-    let transcript = event.results[0][0].transcript;
-    (window as any).isListening = false;
-    
-    // Normalize digits to Chinese characters
-    const digitMap: Record<string, string> = {
-      '0': '零', '1': '一', '2': '二', '3': '三', '4': '四',
-      '5': '五', '6': '六', '7': '七', '8': '八', '9': '九'
-    };
-    
-    // Replace all digits in transcript with Chinese chars
-    transcript = transcript.replace(/\d/g, (d: string) => digitMap[d] || d);
+    // Check for match in interim results
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      const transcriptRaw = event.results[i][0].transcript;
+      
+      // Normalize digits to Chinese characters
+      const digitMap: Record<string, string> = {
+        '0': '零', '1': '一', '2': '二', '3': '三', '4': '四',
+        '5': '五', '6': '六', '7': '七', '8': '八', '9': '九'
+      };
+      
+      const transcript = transcriptRaw.replace(/\d/g, (d: string) => digitMap[d] || d);
 
-    // Simple matching (ignore punctuation)
-    if (transcript.includes(correct) || correct.includes(transcript)) {
-      (window as any).lastHeard = transcript; // Show it briefly? Or just success
-      (window as any).confetti({ particleCount: 30 });
-      
-      const { review2 } = getDailyWords(state);
-      const nextIndex = ((window as any).recallIndex || 0) + 1;
-      
-      setTimeout(() => {
-        (window as any).lastHeard = null;
-        (window as any).recallHintState = 0; // Reset hint state
-        if (nextIndex >= review2.length) {
-          (window as any).recallIndex = 0;
-          window.completeModule(2);
-        } else {
-          (window as any).recallIndex = nextIndex;
-          render();
-        }
-      }, 1000); // Delay to see success
-    } else {
-      (window as any).lastHeard = transcript;
-      render();
+      // Simple matching (ignore punctuation) - Immediate stop on success
+      if (transcript.includes(correct) || correct.includes(transcript)) {
+         recognition.stop(); 
+         handleRecallSuccess();
+         return;
+      }
+
+      if (event.results[i].isFinal) {
+         (window as any).lastHeard = transcript;
+         render();
+      }
     }
   };
 
@@ -679,6 +686,7 @@ function startNextQuiz(review1: any[], wordIndex: number) {
     console.error("Speech Recognition Error", event.error);
     (window as any).isListening = false;
     (window as any).lastHeard = "Error: " + event.error;
+    activeRecognition = null;
     render();
   };
 
@@ -687,10 +695,32 @@ function startNextQuiz(review1: any[], wordIndex: number) {
       (window as any).isListening = false;
       render();
     }
+    activeRecognition = null;
+    if (recognitionTimeout) clearTimeout(recognitionTimeout);
   };
 
   recognition.start();
 };
+
+function handleRecallSuccess() {
+  (window as any).lastHeard = "Correct!"; // Show it briefly? Or just success
+  (window as any).confetti({ particleCount: 30 });
+      
+  const { review2 } = getDailyWords(state);
+  const nextIndex = ((window as any).recallIndex || 0) + 1;
+  
+  setTimeout(() => {
+    (window as any).lastHeard = null;
+    (window as any).recallHintState = 0; // Reset hint state
+    if (nextIndex >= review2.length) {
+      (window as any).recallIndex = 0;
+      window.completeModule(2);
+    } else {
+      (window as any).recallIndex = nextIndex;
+      render();
+    }
+  }, 1000); // Delay to see success
+}
 
 function getRecallHintText(word: any) {
   const state = (window as any).recallHintState || 0;
