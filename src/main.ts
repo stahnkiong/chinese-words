@@ -38,10 +38,12 @@ declare global {
     handleRecallHint: (cn: string) => void;
     recallHintState: number;
     toggleSpeechRecognition: (correct: string) => void;
+    toggleMasterySpeechRecognition: (correct: string) => void;
   }
 }
 
 let activeRecognition: any = null;
+let activeMasteryRecognition: any = null;
 let recognitionTimeout: any = null;
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -374,6 +376,21 @@ function renderMastery() {
           <p class="text-indigo-900 font-semibold text-lg mb-4">"Now, say a sentence using this word to your Dad!"</p>
           <button class="btn-primary w-full" onclick="window.nextMasteryWord()">Done</button>
         </div>
+
+        <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 text-center mb-8">
+            <h3 class="text-lg font-bold text-slate-700 mb-2">Speak Malay</h3>
+            <p class="text-slate-500 mb-4">"${word.bm || 'No Malay translation'}"</p>
+             
+            <button 
+              class="w-16 h-16 rounded-full flex items-center justify-center mx-auto transition-all ${(window as any).isMasteryListening ? 'bg-red-500 animate-pulse ring-4 ring-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200'}"
+              onclick="window.toggleMasterySpeechRecognition('${word.bm || ''}')"
+            >
+              <span class="text-2xl">${(window as any).isMasteryListening ? '⏹️' : '🎙️'}</span>
+            </button>
+             <div class="mt-4 h-6 text-sm font-medium text-slate-500">
+               ${(window as any).isMasteryListening ? 'Listening...' : ((window as any).lastMasteryHeard ? ((window as any).lastMasteryHeard.startsWith('Correct') ? '<span class="text-green-500 font-bold">' + (window as any).lastMasteryHeard + '</span>' : `Heard: "${(window as any).lastMasteryHeard}"`) : 'Tap to practice pronunciation')}
+            </div>
+        </div>
       `}
 
       <div class="mt-8 flex justify-between items-center">
@@ -669,7 +686,7 @@ function startNextQuiz(review1: any[], wordIndex: number) {
       const transcript = transcriptRaw.replace(/\d/g, (d: string) => digitMap[d] || d);
 
       // Simple matching (ignore punctuation) - Immediate stop on success
-      if (transcript.includes(correct) || correct.includes(transcript)) {
+      if (transcript.includes(correct)) {
          recognition.stop(); 
          handleRecallSuccess();
          return;
@@ -749,6 +766,82 @@ function getRecallHintText(word: any) {
 (window as any).masteryIndex = 0;
 (window as any).isSentenceMode = false;
 
+(window as any).isMasteryListening = false;
+(window as any).lastMasteryHeard = null;
+
+(window as any).toggleMasterySpeechRecognition = (correct: string) => {
+  if ((window as any).isMasteryListening && activeMasteryRecognition) {
+    activeMasteryRecognition.stop();
+    return;
+  }
+
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech recognition not supported in this browser. Try Chrome!");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'ms-MY';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  activeMasteryRecognition = recognition;
+
+  recognition.onstart = () => {
+    (window as any).isMasteryListening = true;
+    (window as any).lastMasteryHeard = null;
+    render();
+
+    // Auto stop after 5 seconds
+    setTimeout(() => {
+      if (activeMasteryRecognition === recognition) {
+        recognition.stop();
+      }
+    }, 5000);
+  };
+
+  recognition.onresult = (event: any) => {
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      const transcript = event.results[i][0].transcript;
+      
+      const normalize = (s: string) => s.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+      const normTranscript = normalize(transcript);
+      const normCorrect = normalize(correct);
+
+      if (normTranscript.includes(normCorrect) || normCorrect.includes(normTranscript)) {
+         recognition.stop(); 
+         (window as any).lastMasteryHeard = "Correct! 🎉";
+         (window as any).confetti({ particleCount: 30, origin: { y: 0.7 } });
+         render(); // Force render to show update
+         return;
+      }
+
+      if (event.results[i].isFinal) {
+         (window as any).lastMasteryHeard = transcript;
+         render();
+      }
+    }
+  };
+
+  recognition.onerror = (event: any) => {
+    console.error("Mastery Speech Error", event.error);
+    (window as any).isMasteryListening = false;
+    (window as any).lastMasteryHeard = "Error: " + event.error;
+    activeMasteryRecognition = null;
+    render();
+  };
+
+  recognition.onend = () => {
+    if ((window as any).isMasteryListening) {
+      (window as any).isMasteryListening = false;
+      render();
+    }
+    activeMasteryRecognition = null;
+  };
+
+  recognition.start();
+};
+
 let masteryWriters: any[] = [];
 let activeMasteryWriterIndex = 0;
 
@@ -818,6 +911,8 @@ function startNextMasteryQuiz() {
   const { review3 } = getDailyWords(state);
   const nextIndex = ((window as any).masteryIndex || 0) + 1;
   (window as any).isSentenceMode = false;
+  (window as any).isMasteryListening = false;
+  (window as any).lastMasteryHeard = null;
 
   if (nextIndex >= review3.length) {
     (window as any).masteryIndex = 0;

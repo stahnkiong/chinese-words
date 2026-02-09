@@ -352,10 +352,151 @@ export const ALL_WORDS: Word[] = [
   { cn: "学房", en: "Schooling", pinyin: "xué fáng", parts: ["学"], bm: "Persekolahan", en_pronounce: "ˈskuː.lɪŋ", bm_pronounce: "per-se-ko-la-han" },
   { cn: "学期", en: "Term", pinyin: "xué qī", parts: ["学"], bm: "Penggal", en_pronounce: "tɜːrm", bm_pronounce: "peng-gal" },
 
-  // Root: 生 (Birth/Life)
+  // Root: 生 (Birth/Life) 250 words
   { cn: "学生", en: "Student", pinyin: "xué shēng", parts: ["生"], bm: "Pelajar", en_pronounce: "ˈstjuː.dənt", bm_pronounce: "pe-la-jar" },
   { cn: "生活", en: "Life", pinyin: "shēng huó", parts: ["生"], bm: "Kehidupan", en_pronounce: "laɪf", bm_pronounce: "ke-hi-du-pan" },
   { cn: "先生", en: "Mr.", pinyin: "xiān sheng", parts: ["生"], bm: "Encik", en_pronounce: "ˈmɪs.tər", bm_pronounce: "en-cik" },
   { cn: "医生", en: "Doctor", pinyin: "yī shēng", parts: ["生"], bm: "Doktor", en_pronounce: "ˈdɒk.tər", bm_pronounce: "dok-tor" },
-  { cn: "出生", en: "Born", pinyin: "chū shēng", parts: ["生"], bm: "Lahir", en_pronounce: "bɔːrn", bm_pronounce: "la-hir" }
+  { cn: "出生", en: "Born", pinyin: "chū shēng", parts: ["生"], bm: "Lahir", en_pronounce: "bɔːrn", bm_pronounce: "la-hir" },
+  // Root: 四 (Four)
+  { cn: "四个", en: "Four items", pinyin: "sì gè", parts: ["四"], bm: "Empat barang", en_pronounce: "fɔːr aɪ.təmz", bm_pronounce: "em-pat ba-rang" },
+  { cn: "四月", en: "April", pinyin: "sì yuè", parts: ["四"], bm: "April", en_pronounce: "ˈeɪ.prəl", bm_pronounce: "e-pril" },
+  { cn: "第四", en: "Fourth", pinyin: "dì sì", parts: ["四"], bm: "Keempat", en_pronounce: "fɔːrθ", bm_pronounce: "ke-em-pat" },
+  { cn: "四季", en: "Four Seasons", pinyin: "sì jì", parts: ["四"], bm: "Empat musim", en_pronounce: "fɔːr ˈsiː.zənz", bm_pronounce: "em-pat mu-sim" },
+  { cn: "四周", en: "All around", pinyin: "sì zhōu", parts: ["四"], bm: "Sekeliling", en_pronounce: "ɔːl əˈraʊnd", bm_pronounce: "se-ke-li-ling" },
+
+  // Root: 五 (Five)
+  { cn: "五个", en: "Five items", pinyin: "wǔ gè", parts: ["五"], bm: "Lima barang", en_pronounce: "faɪv aɪ.təmz", bm_pronounce: "li-ma ba-rang" },
+  { cn: "五月", en: "May", pinyin: "wǔ yuè", parts: ["五"], bm: "Mei", en_pronounce: "meɪ", bm_pronounce: "mei" },
+  { cn: "第五", en: "Fifth", pinyin: "dì wǔ", parts: ["五"], bm: "Kelima", en_pronounce: "fɪfθ", bm_pronounce: "ke-li-ma" },
+  { cn: "五官", en: "Facial features", pinyin: "wǔ guān", parts: ["五"], bm: "Pancaindera muka", en_pronounce: "ˈfeɪ.ʃəl ˈjiː.tʃərz", bm_pronounce: "pan-ca-in-de-ra mu-ka" },
+  { cn: "五颜六色", en: "Colorful", pinyin: "wǔ yán liù sè", parts: ["五"], bm: "Warna-warni", en_pronounce: "ˈkʌl.ə.fəl", bm_pronounce: "war-na war-ni" },
+
+  // Root: 六 (Six)
+  { cn: "六个", en: "Six items", pinyin: "liù gè", parts: ["六"], bm: "Enam barang", en_pronounce: "sɪks aɪ.təmz", bm_pronounce: "e-nam ba-rang" },
+  { cn: "六月", en: "June", pinyin: "liù yuè", parts: ["六"], bm: "Jun", en_pronounce: "dʒuːn", bm_pronounce: "jun" },
+  { cn: "第六", en: "Sixth", pinyin: "dì liù", parts: ["六"], bm: "Keenam", en_pronounce: "sɪksθ", bm_pronounce: "ke-e-nam" },
+  { cn: "六亲不认", en: "Ruthless", pinyin: "liù qīn bù rèn", parts: ["六"], bm: "Tidak berperikemanusiaan", en_pronounce: "ˈruːθ.ləs", bm_pronounce: "ti-dak ber-pe-ri-ke-ma-nu-si-a-an" },
+  { cn: "六神无主", en: "Panic-stricken", pinyin: "liù shén wú zhǔ", parts: ["六"], bm: "Panik", en_pronounce: "ˈpæn.ɪk ˈstrɪk.ən", bm_pronounce: "pa-nik" },
+
+  // Root: 七 (Seven)
+  { cn: "七个", en: "Seven items", pinyin: "qī gè", parts: ["七"], bm: "Tujuh barang", en_pronounce: "ˈsev.ən aɪ.təmz", bm_pronounce: "tu-juh ba-rang" },
+  { cn: "七月", en: "July", pinyin: "qī yuè", parts: ["七"], bm: "Julai", en_pronounce: "dʒuˈlaɪ", bm_pronounce: "ju-lai" },
+  { cn: "第七", en: "Seventh", pinyin: "dì qī", parts: ["七"], bm: "Ketujuh", en_pronounce: "ˈsev.ənθ", bm_pronounce: "ke-tu-juh" },
+  { cn: "七上八下", en: "Anxious", pinyin: "qī shàng bā xià", parts: ["七"], bm: "Gelisah", en_pronounce: "ˈæŋk.ʃəs", bm_pronounce: "ge-li-sah" },
+  { cn: "乱七八糟", en: "Messy", pinyin: "luàn qī bā zāo", parts: ["七"], bm: "Berselerak", en_pronounce: "ˈmes.i", bm_pronounce: "ber-se-le-rak" },
+
+  // Root: 八 (Eight)
+  { cn: "八个", en: "Eight items", pinyin: "bā gè", parts: ["八"], bm: "Lapan barang", en_pronounce: "eɪt aɪ.təmz", bm_pronounce: "la-pan ba-rang" },
+  { cn: "八月", en: "August", pinyin: "bā yuè", parts: ["八"], bm: "Ogos", en_pronounce: "ɔːˈɡʌst", bm_pronounce: "o-gos" },
+  { cn: "第八", en: "Eighth", pinyin: "dì bā", parts: ["八"], bm: "Kelapan", en_pronounce: "eɪtθ", bm_pronounce: "ke-la-pan" },
+  { cn: "八方", en: "All directions", pinyin: "bā fāng", parts: ["八"], bm: "Semua arah", en_pronounce: "ɔːl daɪˈrek.ʃənz", bm_pronounce: "se-mu-a a-rah" },
+  { cn: "八卦", en: "Gossip", pinyin: "bā guà", parts: ["八"], bm: "Gosip", en_pronounce: "ˈɡɒs.ɪp", bm_pronounce: "go-sip" },
+
+  // Root: 九 (Nine)
+  { cn: "九个", en: "Nine items", pinyin: "jiǔ gè", parts: ["九"], bm: "Sembilan barang", en_pronounce: "naɪn aɪ.təmz", bm_pronounce: "sem-bi-lan ba-rang" },
+  { cn: "九月", en: "September", pinyin: "jiǔ yuè", parts: ["九"], bm: "September", en_pronounce: "sepˈtem.bər", bm_pronounce: "sep-tem-ber" },
+  { cn: "第九", en: "Ninth", pinyin: "dì jiǔ", parts: ["九"], bm: "Kesembilan", en_pronounce: "naɪnθ", bm_pronounce: "ke-sem-bi-lan" },
+  { cn: "九死一生", en: "Narrow escape", pinyin: "jiǔ sǐ yī shēng", parts: ["九"], bm: "Nyaris maut", en_pronounce: "ˈnær.əʊ ɪˈskeɪp", bm_pronounce: "nya-ris ma-ut" },
+  { cn: "九牛一毛", en: "Drop in bucket", pinyin: "jiǔ niú yī máo", parts: ["九"], bm: "Terlalu sedikit", en_pronounce: "drɒp ɪn ˈbʌk.ɪt", bm_pronounce: "ter-la-lu se-di-kit" },
+
+  // Root: 东 (East)
+  { cn: "东方", en: "East", pinyin: "dōng fāng", parts: ["东"], bm: "Timur", en_pronounce: "iːst", bm_pronounce: "ti-mur" },
+  { cn: "东西", en: "Thing", pinyin: "dōng xi", parts: ["东"], bm: "Barang", en_pronounce: "θɪŋ", bm_pronounce: "ba-rang" },
+  { cn: "东边", en: "East side", pinyin: "dōng biān", parts: ["东"], bm: "Sebelah timur", en_pronounce: "iːst saɪd", bm_pronounce: "se-be-lah ti-mur" },
+  { cn: "房东", en: "Landlord", pinyin: "fáng dōng", parts: ["东"], bm: "Tuan rumah", en_pronounce: "ˈlænd.lɔːrd", bm_pronounce: "tu-an ru-mah" },
+  { cn: "股东", en: "Shareholder", pinyin: "gǔ dōng", parts: ["东"], bm: "Pemegang saham", en_pronounce: "ˈʃeəˌhəʊl.də", bm_pronounce: "pe-me-gang sa-ham" },
+
+  // Root: 西 (West)
+  { cn: "西方", en: "West", pinyin: "xī fāng", parts: ["西"], bm: "Barat", en_pronounce: "west", bm_pronounce: "ba-rat" },
+  { cn: "西瓜", en: "Watermelon", pinyin: "xī guā", parts: ["西"], bm: "Tembikai", en_pronounce: "ˈwɔː.təˌmel.ən", bm_pronounce: "tem-bi-kai" },
+  { cn: "西餐", en: "Western food", pinyin: "xī cān", parts: ["西"], bm: "Makanan barat", en_pronounce: "ˈwes.tən fuːd", bm_pronounce: "ma-ka-nan ba-rat" },
+  { cn: "西装", en: "Suit", pinyin: "xī zhuāng", parts: ["西"], bm: "Sut", en_pronounce: "suːt", bm_pronounce: "sut" },
+  { cn: "西药", en: "Western medicine", pinyin: "xī yào", parts: ["西"], bm: "Ubat barat", en_pronounce: "ˈwes.tən ˈmed.ɪ.sən", bm_pronounce: "u-bat ba-rat" },
+
+  // Root: 南 (South)
+  { cn: "南方", en: "South", pinyin: "nán fāng", parts: ["南"], bm: "Selatan", en_pronounce: "saʊθ", bm_pronounce: "se-la-tan" },
+  { cn: "南瓜", en: "Pumpkin", pinyin: "nán guā", parts: ["南"], bm: "Labu", en_pronounce: "ˈpʌmp.kɪn", bm_pronounce: "la-bu" },
+  { cn: "南部", en: "Southern part", pinyin: "nán bù", parts: ["南"], bm: "Bahagian selatan", en_pronounce: "ˈsʌð.ən pɑːt", bm_pronounce: "ba-ha-gi-an se-la-tan" },
+  { cn: "指南针", en: "Compass", pinyin: "zhǐ nán zhēn", parts: ["南"], bm: "Kompas", en_pronounce: "ˈkʌm.pəs", bm_pronounce: "kom-pas" },
+  { cn: "南极", en: "South Pole", pinyin: "nán jí", parts: ["南"], bm: "Kutub Selatan", en_pronounce: "saʊθ pəʊl", bm_pronounce: "ku-tub se-la-tan" },
+
+  // Root: 北 (North)
+  { cn: "北方", en: "North", pinyin: "běi fāng", parts: ["北"], bm: "Utara", en_pronounce: "nɔːθ", bm_pronounce: "u-ta-ra" },
+  { cn: "北京", en: "Beijing", pinyin: "běi jīng", parts: ["北"], bm: "Beijing", en_pronounce: "beɪˈdʒɪŋ", bm_pronounce: "bei-jing" },
+  { cn: "北部", en: "Northern part", pinyin: "běi bù", parts: ["北"], bm: "Bahagian utara", en_pronounce: "ˈnɔː.ðən pɑːt", bm_pronounce: "ba-ha-gi-an u-ta-ra" },
+  { cn: "北极", en: "North Pole", pinyin: "běi jí", parts: ["北"], bm: "Kutub Utara", en_pronounce: "nɔːθ pəʊl", bm_pronounce: "ku-tub u-ta-ra" },
+  { cn: "败北", en: "Defeated", pinyin: "bài běi", parts: ["北"], bm: "Kalah", en_pronounce: "dɪˈfiː.tɪd", bm_pronounce: "ka-lah" },
+
+  // Root: 左 (Left)
+  { cn: "左手", en: "Left hand", pinyin: "zuǒ shǒu", parts: ["左"], bm: "Tangan kiri", en_pronounce: "left hænd", bm_pronounce: "ta-ngan ki-ri" },
+  { cn: "左边", en: "Left side", pinyin: "zuǒ biān", parts: ["左"], bm: "Sebelah kiri", en_pronounce: "left saɪd", bm_pronounce: "se-be-lah ki-ri" },
+  { cn: "左面", en: "Left side", pinyin: "zuǒ miàn", parts: ["左"], bm: "Muka kiri", en_pronounce: "left feɪs", bm_pronounce: "mu-ka ki-ri" },
+  { cn: "左右", en: "Around/Approximately", pinyin: "zuǒ yòu", parts: ["左"], bm: "Lebih kurang", en_pronounce: "əˈraʊnd", bm_pronounce: "le-bih ku-rang" },
+  { cn: "左转", en: "Turn left", pinyin: "zuǒ zhuǎn", parts: ["左"], bm: "Pusing kiri", en_pronounce: "tɜːrn left", bm_pronounce: "pu-sing ki-ri" },
+
+  // Root: 右 (Right)
+  { cn: "右手", en: "Right hand", pinyin: "yòu shǒu", parts: ["右"], bm: "Tangan kanan", en_pronounce: "raɪt hænd", bm_pronounce: "ta-ngan ka-nan" },
+  { cn: "右边", en: "Right side", pinyin: "yòu biān", parts: ["右"], bm: "Sebelah kanan", en_pronounce: "raɪt saɪd", bm_pronounce: "se-be-lah ka-nan" },
+  { cn: "右面", en: "Right side", pinyin: "yòu miàn", parts: ["右"], bm: "Muka kanan", en_pronounce: "raɪt feɪs", bm_pronounce: "mu-ka ka-nan" },
+  { cn: "右转", en: "Turn right", pinyin: "yòu zhuǎn", parts: ["右"], bm: "Pusing kanan", en_pronounce: "tɜːrn raɪt", bm_pronounce: "pu-sing ka-nan" },
+  { cn: "座右铭", en: "Motto", pinyin: "zuò yòu míng", parts: ["右"], bm: "Cogan kata", en_pronounce: "ˈmɒt.əʊ", bm_pronounce: "co-gan ka-ta" },
+
+  // Root: 男 (Male)
+  { cn: "男人", en: "Man", pinyin: "nán rén", parts: ["男"], bm: "Lelaki", en_pronounce: "mæn", bm_pronounce: "le-la-ki" },
+  { cn: "男生", en: "Male student", pinyin: "nán shēng", parts: ["男"], bm: "Pelajar lelaki", en_pronounce: "meɪl ˈstjuː.dənt", bm_pronounce: "pe-la-jar le-la-ki" },
+  { cn: "男友", en: "Boyfriend", pinyin: "nán yǒu", parts: ["男"], bm: "Teman lelaki", en_pronounce: "ˈbɔɪ.frend", bm_pronounce: "te-man le-la-ki" },
+  { cn: "男孩", en: "Boy", pinyin: "nán hái", parts: ["男"], bm: "Budak lelaki", en_pronounce: "bɔɪ", bm_pronounce: "bu-dak le-la-ki" },
+  { cn: "长男", en: "Eldest son", pinyin: "zhǎng nán", parts: ["男"], bm: "Anak sulung lelaki", en_pronounce: "ˈel.dɪst sʌn", bm_pronounce: "a-nak su-lung le-la-ki" },
+
+  // Root: 见 (See)
+  { cn: "看见", en: "See", pinyin: "kàn jiàn", parts: ["见"], bm: "Nampak", en_pronounce: "siː", bm_pronounce: "nam-pak" },
+  { cn: "再见", en: "Goodbye", pinyin: "zài jiàn", parts: ["见"], bm: "Selamat tinggal", en_pronounce: "ɡʊdˈbaɪ", bm_pronounce: "se-la-mat ting-gal" },
+  { cn: "见面", en: "Meet", pinyin: "jiàn miàn", parts: ["见"], bm: "Berjumpa", en_pronounce: "miːt", bm_pronounce: "ber-jum-pa" },
+  { cn: "听见", en: "Hear", pinyin: "tīng jiàn", parts: ["见"], bm: "Dengar", en_pronounce: "hɪə", bm_pronounce: "de-ngar" },
+  { cn: "见怪", en: "Take offense", pinyin: "jiàn guài", parts: ["见"], bm: "Tersinggung", en_pronounce: "teɪk əˈfens", bm_pronounce: "ter-sing-gung" },
+
+  // Root: 飞 (Fly)
+  { cn: "飞机", en: "Airplane", pinyin: "fēi jī", parts: ["飞"], bm: "Kapal terbang", en_pronounce: "ˈeə.pleɪn", bm_pronounce: "ka-pal ter-bang" },
+  { cn: "飞鸟", en: "Flying bird", pinyin: "fēi niǎo", parts: ["飞"], bm: "Burung terbang", en_pronounce: "ˈflaɪ.ɪŋ bɜːd", bm_pronounce: "bu-rung ter-bang" },
+  { cn: "飞快", en: "Very fast", pinyin: "fēi kuài", parts: ["飞"], bm: "Sangat laju", en_pronounce: "ˈver.i fɑːst", bm_pronounce: "sa-ngat la-ju" },
+  { cn: "起飞", en: "Take off", pinyin: "qǐ fēi", parts: ["飞"], bm: "Berlepas", en_pronounce: "teɪk ɒf", bm_pronounce: "ber-le-pas" },
+  { cn: "飞奔", en: "Dash", pinyin: "fēi bēn", parts: ["飞"], bm: "Lari pantas", en_pronounce: "dæʃ", bm_pronounce: "la-ri pan-tas" },
+
+  // Root: 吃 (Eat)
+  { cn: "吃饭", en: "Eat rice/meal", pinyin: "chī fàn", parts: ["吃"], bm: "Makan nasi", en_pronounce: "iːt raɪs", bm_pronounce: "ma-kan na-si" },
+  { cn: "小吃", en: "Snack", pinyin: "xiǎo chī", parts: ["吃"], bm: "Makanan ringan", en_pronounce: "snæk", bm_pronounce: "ma-ka-nan ri-ngan" },
+  { cn: "吃力", en: "Strenuous", pinyin: "chī lì", parts: ["吃"], bm: "Meletihkan", en_pronounce: "ˈstren.ju.əs", bm_pronounce: "me-le-tih-kan" },
+  { cn: "好吃", en: "Delicious", pinyin: "hǎo chī", parts: ["吃"], bm: "Sedap", en_pronounce: "dɪˈlɪʃ.əs", bm_pronounce: "se-dap" },
+  { cn: "吃惊", en: "Surprised", pinyin: "chī jīng", parts: ["吃"], bm: "Terkejut", en_pronounce: "səˈpraɪzd", bm_pronounce: "ter-ke-jut" },
+
+  // Root: 喝 (Drink)
+  { cn: "喝水", en: "Drink water", pinyin: "hē shuǐ", parts: ["喝"], bm: "Minum air", en_pronounce: "drɪŋk ˈwɔː.tə", bm_pronounce: "mi-num a-ir" },
+  { cn: "喝茶", en: "Drink tea", pinyin: "hē chá", parts: ["喝"], bm: "Minum teh", en_pronounce: "drɪŋk tiː", bm_pronounce: "mi-num teh" },
+  { cn: "喝汤", en: "Drink soup", pinyin: "hē tāng", parts: ["喝"], bm: "Minum sup", en_pronounce: "drɪŋk suːp", bm_pronounce: "mi-num sup" },
+  { cn: "好喝", en: "Tasty (drink)", pinyin: "hǎo hē", parts: ["喝"], bm: "Sedap diminum", en_pronounce: "ˈteɪ.sti", bm_pronounce: "se-dap di-mi-num" },
+  { cn: "喝采", en: "Cheer", pinyin: "hè cǎi", parts: ["喝"], bm: "Sorakan", en_pronounce: "tʃɪə", bm_pronounce: "so-ra-kan" },
+
+  // Root: 写 (Write)
+  { cn: "写字", en: "Write characters", pinyin: "xiě zì", parts: ["写"], bm: "Tulis tulisan", en_pronounce: "raɪt ˈkær.ək.təz", bm_pronounce: "tu-lis tu-li-san" },
+  { cn: "听写", en: "Dictation", pinyin: "tīng xiě", parts: ["写"], bm: "Rencana", en_pronounce: "dɪkˈteɪ.ʃən", bm_pronounce: "ren-ca-na" },
+  { cn: "写信", en: "Write letter", pinyin: "xiě xìn", parts: ["写"], bm: "Tulis surat", en_pronounce: "raɪt ˈlet.ə", bm_pronounce: "tu-lis su-rat" },
+  { cn: "写作", en: "Writing", pinyin: "xiě zuò", parts: ["写"], bm: "Penulisan", en_pronounce: "ˈraɪ.tɪŋ", bm_pronounce: "pe-nu-li-san" },
+  { cn: "大写", en: "Uppercase", pinyin: "dà xiě", parts: ["写"], bm: "Huruf besar", en_pronounce: "ˈʌp.ə.keɪs", bm_pronounce: "hu-ruf be-sar" },
+
+  // Root: 听 (Listen)
+  { cn: "听说", en: "Hear of", pinyin: "tīng shuō", parts: ["听"], bm: "Dengar khabar", en_pronounce: "hɪə ɒv", bm_pronounce: "de-ngar kha-bar" },
+  { cn: "听话", en: "Obedient", pinyin: "tīng huà", parts: ["听"], bm: "Taat", en_pronounce: "əˈbiː.di.ənt", bm_pronounce: "ta-at" },
+  { cn: "听众多", en: "Audience", pinyin: "tīng zhòng", parts: ["听"], bm: "Penonton", en_pronounce: "ˈɔː.di.əns", bm_pronounce: "pe-non-ton" },
+  { cn: "好听", en: "Pleasant to hear", pinyin: "hǎo tīng", parts: ["听"], bm: "Merdu", en_pronounce: "ˈplez.ənt tuː hɪə", bm_pronounce: "mer-du" },
+  { cn: "动听", en: "Melodious", pinyin: "dòng tīng", parts: ["听"], bm: "Sedap didengar", en_pronounce: "məˈləʊ.di.əs", bm_pronounce: "se-dap di-de-ngar" },
+
+  // Root: 说 (Speak)
+  { cn: "说话", en: "Speak", pinyin: "shuō huà", parts: ["说"], bm: "Bercakap", en_pronounce: "spiːk", bm_pronounce: "ber-ca-kap" },
+  { cn: "说明", en: "Explain", pinyin: "shuō míng", parts: ["说"], bm: "Menerangkan", en_pronounce: "ɪkˈspleɪn", bm_pronounce: "me-ne-rang-kan" },
+  { cn: "小说", en: "Novel", pinyin: "xiǎo shuō", parts: ["说"], bm: "Novel", en_pronounce: "ˈnɒv.əl", bm_pronounce: "no-vel" },
+  { cn: "说谎", en: "Lie", pinyin: "shuō huǎng", parts: ["说"], bm: "Menipu", en_pronounce: "laɪ", bm_pronounce: "me-ni-pu" },
+  { cn: "笑说", en: "Joke", pinyin: "xiào shuō", parts: ["说"], bm: "Bergurau", en_pronounce: "dʒəʊk", bm_pronounce: "ber-gu-rau" },
+
+  // Total groups: 70
 ];
