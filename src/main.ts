@@ -39,6 +39,12 @@ declare global {
     recallHintState: number;
     toggleSpeechRecognition: (correct: string) => void;
     toggleMasterySpeechRecognition: (correct: string) => void;
+    finishSentenceCreation: () => void;
+    revealMasteryMalay: () => void;
+    
+    // Mastery State
+    masteryStep: number; // 0: Write, 1: Sentence, 2: Speak Malay, 3: Next Word
+    isMasteryMalayRevealed: boolean;
   }
 }
 
@@ -347,7 +353,7 @@ function renderMastery() {
 
   const currentWordIndex = (window as any).masteryIndex || 0;
   const word = review3[currentWordIndex];
-  const isSentenceMode = (window as any).isSentenceMode || false;
+  const isSentenceMode = ((window as any).masteryStep || 0) > 0;
 
   return `
     <div class="card max-w-2xl mx-auto">
@@ -372,25 +378,47 @@ function renderMastery() {
           </div>
         </div>
       ` : `
-        <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 text-center mb-8">
-          <p class="text-indigo-900 font-semibold text-lg mb-4">"Now, say a sentence using this word to your Dad!"</p>
-          <button class="btn-primary w-full" onclick="window.nextMasteryWord()">Done</button>
-        </div>
+        <!-- Step 1: Sentence Creation -->
+        ${(window as any).masteryStep === 1 ? `
+          <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 text-center mb-8">
+            <p class="text-indigo-900 font-semibold text-lg mb-4">"Now, say a sentence using this word to your Dad!"</p>
+            <button class="btn-primary w-full" onclick="window.finishSentenceCreation()">Done</button>
+          </div>
+        ` : ''}
 
-        <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 text-center mb-8">
-            <h3 class="text-lg font-bold text-slate-700 mb-2">Speak Malay</h3>
-            <p class="text-slate-500 mb-4">"${word.bm || 'No Malay translation'}"</p>
-             
-            <button 
-              class="w-16 h-16 rounded-full flex items-center justify-center mx-auto transition-all ${(window as any).isMasteryListening ? 'bg-red-500 animate-pulse ring-4 ring-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200'}"
-              onclick="window.toggleMasterySpeechRecognition('${word.bm || ''}')"
-            >
-              <span class="text-2xl">${(window as any).isMasteryListening ? '⏹️' : '🎙️'}</span>
-            </button>
-             <div class="mt-4 h-6 text-sm font-medium text-slate-500">
-               ${(window as any).isMasteryListening ? 'Listening...' : ((window as any).lastMasteryHeard ? ((window as any).lastMasteryHeard.startsWith('Correct') ? '<span class="text-green-500 font-bold">' + (window as any).lastMasteryHeard + '</span>' : `Heard: "${(window as any).lastMasteryHeard}"`) : 'Tap to practice pronunciation')}
-            </div>
-        </div>
+        <!-- Step 2: Speak Malay -->
+        ${(window as any).masteryStep === 2 ? `
+          <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 text-center mb-8">
+              <h3 class="text-lg font-bold text-slate-700 mb-2">Speak Malay</h3>
+              
+              <div class="min-h-[3rem] mb-4 flex items-center justify-center">
+                ${(window as any).isMasteryMalayRevealed 
+                  ? `<p class="text-slate-500 text-xl font-medium animate-in fade-in">"${word.bm || 'No Malay translation'}"</p>`
+                  : `<button class="text-sm font-bold text-slate-400 border-b-2 border-slate-300 hover:text-slate-600 hover:border-slate-400 transition-colors pb-0.5" onclick="window.revealMasteryMalay()">Reveal Malay Translation</button>`
+                }
+              </div>
+              
+              <button 
+                class="w-16 h-16 rounded-full flex items-center justify-center mx-auto transition-all ${(window as any).isMasteryListening ? 'bg-red-500 animate-pulse ring-4 ring-red-200' : 'bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200'}"
+                onclick="window.toggleMasterySpeechRecognition('${word.bm || ''}')"
+              >
+                <span class="text-2xl">${(window as any).isMasteryListening ? '⏹️' : '🎙️'}</span>
+              </button>
+              
+              <div class="mt-4 h-6 text-sm font-medium text-slate-500">
+                ${(window as any).isMasteryListening ? 'Listening...' : ((window as any).lastMasteryHeard ? `Heard: "${(window as any).lastMasteryHeard}"` : 'Tap to practice pronunciation')}
+              </div>
+          </div>
+        ` : ''}
+
+        <!-- Step 3: Completed / Next Word -->
+        ${(window as any).masteryStep === 3 ? `
+          <div class="bg-green-50 p-6 rounded-2xl border-2 border-green-100 text-center mb-8 animate-in zoom-in duration-300">
+             <div class="text-4xl mb-2">🎉</div>
+             <p class="text-green-800 font-bold text-xl mb-4">Great Job!</p>
+             <button class="btn-primary w-full bg-green-600 hover:bg-green-700 shadow-green-200" onclick="window.nextMasteryWord()">Next Word</button>
+          </div>
+        ` : ''}
       `}
 
       <div class="mt-8 flex justify-between items-center">
@@ -763,84 +791,100 @@ function getRecallHintText(word: any) {
 };
 
 // Mastery Handlers
+// Mastery Handlers
 (window as any).masteryIndex = 0;
-(window as any).isSentenceMode = false;
+// Steps: 0 = Write, 1 = Sentence, 2 = Speak Malay, 3 = Next Word
+(window as any).masteryStep = 0;
+(window as any).isMasteryMalayRevealed = false;
 
 (window as any).isMasteryListening = false;
 (window as any).lastMasteryHeard = null;
 
-(window as any).toggleMasterySpeechRecognition = (correct: string) => {
-  if ((window as any).isMasteryListening && activeMasteryRecognition) {
-    activeMasteryRecognition.stop();
-    return;
-  }
-
-  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    alert("Speech recognition not supported in this browser. Try Chrome!");
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = 'ms-MY';
-  recognition.continuous = false;
-  recognition.interimResults = true;
-  activeMasteryRecognition = recognition;
-
-  recognition.onstart = () => {
-    (window as any).isMasteryListening = true;
-    (window as any).lastMasteryHeard = null;
+(window as any).finishSentenceCreation = () => {
+    (window as any).masteryStep = 2;
     render();
-
-    // Auto stop after 5 seconds
-    setTimeout(() => {
-      if (activeMasteryRecognition === recognition) {
-        recognition.stop();
-      }
-    }, 5000);
-  };
-
-  recognition.onresult = (event: any) => {
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      const transcript = event.results[i][0].transcript;
-      
-      const normalize = (s: string) => s.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
-      const normTranscript = normalize(transcript);
-      const normCorrect = normalize(correct);
-
-      if (normTranscript.includes(normCorrect) || normCorrect.includes(normTranscript)) {
-         recognition.stop(); 
-         (window as any).lastMasteryHeard = "Correct! 🎉";
-         (window as any).confetti({ particleCount: 30, origin: { y: 0.7 } });
-         render(); // Force render to show update
-         return;
-      }
-
-      if (event.results[i].isFinal) {
-         (window as any).lastMasteryHeard = transcript;
-         render();
-      }
-    }
-  };
-
-  recognition.onerror = (event: any) => {
-    console.error("Mastery Speech Error", event.error);
-    (window as any).isMasteryListening = false;
-    (window as any).lastMasteryHeard = "Error: " + event.error;
-    activeMasteryRecognition = null;
-    render();
-  };
-
-  recognition.onend = () => {
-    if ((window as any).isMasteryListening) {
-      (window as any).isMasteryListening = false;
-      render();
-    }
-    activeMasteryRecognition = null;
-  };
-
-  recognition.start();
 };
+
+(window as any).revealMasteryMalay = () => {
+    (window as any).isMasteryMalayRevealed = true;
+    render();
+};
+
+(window as any).toggleMasterySpeechRecognition = (correct: string) => {
+    if ((window as any).isMasteryListening && activeMasteryRecognition) {
+      activeMasteryRecognition.stop();
+      return;
+    }
+  
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition not supported in this browser. Try Chrome!");
+      return;
+    }
+  
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'ms-MY';
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    activeMasteryRecognition = recognition;
+  
+    recognition.onstart = () => {
+      (window as any).isMasteryListening = true;
+      (window as any).lastMasteryHeard = null;
+      render();
+  
+      // Auto stop after 5 seconds
+      setTimeout(() => {
+        if (activeMasteryRecognition === recognition) {
+          recognition.stop();
+        }
+      }, 5000);
+    };
+  
+    recognition.onresult = (event: any) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const transcript = event.results[i][0].transcript;
+        
+        const normalize = (s: string) => s.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").trim();
+        const normTranscript = normalize(transcript);
+        const normCorrect = normalize(correct);
+  
+        if (normTranscript.includes(normCorrect) || normCorrect.includes(normTranscript)) {
+           recognition.stop(); 
+           (window as any).lastMasteryHeard = "Correct! 🎉";
+           (window as any).confetti({ particleCount: 30, origin: { y: 0.7 } });
+           
+           // Transition to Step 3 (Next Word)
+           (window as any).masteryStep = 3;
+           render(); 
+           return;
+        }
+  
+        if (event.results[i].isFinal) {
+           (window as any).lastMasteryHeard = transcript;
+           render();
+        }
+      }
+    };
+  
+    recognition.onerror = (event: any) => {
+      console.error("Mastery Speech Error", event.error);
+      (window as any).isMasteryListening = false;
+      (window as any).lastMasteryHeard = "Error: " + event.error;
+      activeMasteryRecognition = null;
+      render();
+    };
+  
+    recognition.onend = () => {
+      if ((window as any).isMasteryListening) {
+        (window as any).isMasteryListening = false;
+        render();
+      }
+      activeMasteryRecognition = null;
+    };
+  
+    recognition.start();
+  };
 
 let masteryWriters: any[] = [];
 let activeMasteryWriterIndex = 0;
@@ -848,7 +892,8 @@ let activeMasteryWriterIndex = 0;
 function initMasteryWriter() {
   const { review3 } = getDailyWords(state);
   const index = (window as any).masteryIndex || 0;
-  if (!review3[index] || (window as any).isSentenceMode) return;
+  // Only init writer if in Step 0
+  if (!review3[index] || (window as any).masteryStep !== 0) return;
 
   masteryWriters = [];
   activeMasteryWriterIndex = 0;
@@ -880,7 +925,8 @@ function startNextMasteryQuiz() {
     // Word Complete -> Go to Sentence Mode
     (window as any).confetti({ particleCount: 50, spread: 60 });
     setTimeout(() => {
-       (window as any).isSentenceMode = true;
+       // Transition to Step 1 (Sentence)
+       (window as any).masteryStep = 1;
        render();
     }, 1000);
     return;
@@ -910,7 +956,9 @@ function startNextMasteryQuiz() {
 (window as any).nextMasteryWord = () => {
   const { review3 } = getDailyWords(state);
   const nextIndex = ((window as any).masteryIndex || 0) + 1;
-  (window as any).isSentenceMode = false;
+  (window as any).masteryStep = 0;
+  (window as any).isMasteryMalayRevealed = false;
+  
   (window as any).isMasteryListening = false;
   (window as any).lastMasteryHeard = null;
 
