@@ -88,7 +88,8 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 
 function renderHeader() {
   const progress = (state.currentStudyDay / 365) * 100;
-  const totalWords = state.currentStudyDay * state.pace;
+  // Calculate mastered words based on Library availability (Day 15 onwards)
+  const totalWords = Math.max(0, (state.currentStudyDay - 15) * state.pace);
   
   return `
     <header class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center mb-8 select-none" id="main-header">
@@ -106,30 +107,104 @@ function renderHeader() {
     
     <div class="max-w-2xl mx-auto px-6 mb-12">
       <div class="flex justify-center mb-6">
-        ${renderTree(totalWords)}
+        ${renderMedals(totalWords)}
       </div>
       <p class="text-center text-slate-500 text-sm font-medium">${totalWords} words mastered</p>
     </div>
   `;
 }
 
-function renderTree(wordCount: number) {
-  // 1 leaf = 1 word. Progression: Seedling -> Small Plant -> Tree -> Large Tree
-  // We'll use a simple SVG that grows based on wordCount
-  const scale = Math.min(1 + wordCount / 100, 3);
-  const leafColor = wordCount > 10 ? '#22c55e' : '#86efac';
+function renderMedals(wordCount: number) {
+  const medals = [];
+
+  // Seed (Always present as the start)
+  medals.push(`
+    <div class="flex flex-col items-center animate-in zoom-in duration-500">
+      <div class="w-12 h-12 rounded-full bg-green-100 border-2 border-green-200 flex items-center justify-center text-2xl shadow-sm" title="Beginner's Seed">
+        🌱
+      </div>
+      <span class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Start</span>
+    </div>
+  `);
+
+  if (wordCount >= 10) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-100">
+        <div class="w-12 h-12 rounded-full bg-orange-100 border-2 border-orange-300 flex items-center justify-center text-xl shadow-md text-orange-700 font-black relative" title="10 Words">
+          <span>10</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥉</div>
+        </div>
+        <span class="text-[10px] font-bold text-orange-400 mt-1 uppercase tracking-wider">Bronze</span>
+      </div>
+    `);
+  }
+
+  if (wordCount >= 100) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-200">
+        <div class="w-12 h-12 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center text-xl shadow-md text-slate-600 font-black relative" title="100 Words">
+          <span>100</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥈</div>
+        </div>
+        <span class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-wider">Silver</span>
+      </div>
+    `);
+  }
+
+  if (wordCount >= 200) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-250">
+        <div class="w-12 h-12 rounded-full bg-teal-100 border-2 border-teal-300 flex items-center justify-center text-sm shadow-md text-teal-700 font-black relative" title="200 Words">
+          <span>200</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥉+</div>
+        </div>
+        <span class="text-[10px] font-bold text-teal-500 mt-1 uppercase tracking-wider">Bronze+</span>
+      </div>
+    `);
+  }
+
+  if (wordCount >= 500) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-275">
+        <div class="w-12 h-12 rounded-full bg-violet-100 border-2 border-violet-300 flex items-center justify-center text-sm shadow-md text-violet-700 font-black relative" title="500 Words">
+          <span>500</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥈+</div>
+        </div>
+        <span class="text-[10px] font-bold text-violet-500 mt-1 uppercase tracking-wider">Silver+</span>
+      </div>
+    `);
+  }
+
+  if (wordCount >= 1000) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-300">
+        <div class="w-12 h-12 rounded-full bg-yellow-100 border-2 border-yellow-300 flex items-center justify-center text-sm shadow-md text-yellow-700 font-black relative" title="1000 Words">
+          <span>1k</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥇</div>
+        </div>
+        <span class="text-[10px] font-bold text-yellow-500 mt-1 uppercase tracking-wider">Gold</span>
+      </div>
+    `);
+  }
   
+  // Thousands logic (2k, 3k, etc.)
+  for (let k = 2; k * 1000 <= wordCount; k++) {
+      // Cap animations delay to avoid waiting too long if they have many medals
+      const delay = Math.min(300 + (k-1)*100, 1000); 
+      medals.push(`
+        <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-[${delay}ms]">
+          <div class="w-12 h-12 rounded-full bg-indigo-100 border-2 border-indigo-300 flex items-center justify-center text-sm shadow-md text-indigo-700 font-black relative" title="${k}000 Words">
+            <span>${k}k</span>
+            <div class="absolute -bottom-1 -right-1 text-xs">💎</div>
+          </div>
+          <span class="text-[10px] font-bold text-indigo-400 mt-1 uppercase tracking-wider">${k}k</span>
+        </div>
+      `);
+  }
+
   return `
-    <div class="relative w-32 h-32 flex items-end justify-center">
-      <svg viewBox="0 0 100 100" class="w-full h-full transition-transform duration-1000" style="transform: scale(${scale})">
-        <!-- Trunk -->
-        <path d="M45 100 L45 80 Q50 75 55 80 L55 100 Z" fill="#78350f" />
-        <!-- Leaves (simplified) -->
-        ${wordCount > 0 ? `<circle cx="50" cy="70" r="15" fill="${leafColor}" />` : ''}
-        ${wordCount > 5 ? `<circle cx="40" cy="60" r="12" fill="${leafColor}" />` : ''}
-        ${wordCount > 15 ? `<circle cx="60" cy="60" r="12" fill="${leafColor}" />` : ''}
-        ${wordCount > 30 ? `<circle cx="50" cy="50" r="18" fill="${leafColor}" />` : ''}
-      </svg>
+    <div class="flex flex-wrap justify-center gap-4 py-4">
+      ${medals.join('')}
     </div>
   `;
 }
@@ -381,8 +456,23 @@ function renderMastery() {
         <!-- Step 1: Sentence Creation -->
         ${(window as any).masteryStep === 1 ? `
           <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 text-center mb-8">
-            <p class="text-indigo-900 font-semibold text-lg mb-4">"Now, say a sentence using this word to your Dad!"</p>
-            <button class="btn-primary w-full" onclick="window.finishSentenceCreation()">Done</button>
+            <p class="text-indigo-900 font-semibold text-lg mb-4">"Make a simple sentence using this word!"</p>
+            <div class="grid gap-3">
+              <button 
+                class="w-full py-3 bg-white border-2 border-indigo-200 text-indigo-600 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-50 transition-all shadow-sm" 
+                onclick="window.handleSentenceExampleClick('${word.cn}')"
+              >
+                <span>Open Sentence Examples</span>
+                <span>🔗</span>
+              </button>
+              <button 
+                class="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed" 
+                onclick="window.finishSentenceCreation()"
+                ${!(window as any).hasOpenedExamples ? 'disabled' : ''}
+              >
+                ${(window as any).hasOpenedExamples ? 'Done' : 'Open Link First ☝️'}
+              </button>
+            </div>
           </div>
         ` : ''}
 
@@ -716,7 +806,7 @@ function startNextQuiz(review1: any[], wordIndex: number) {
       // Simple matching (ignore punctuation) - Immediate stop on success
       if (transcript.includes(correct)) {
          recognition.stop(); 
-         handleRecallSuccess();
+         handleRecallSuccess(transcript);
          return;
       }
 
@@ -747,8 +837,8 @@ function startNextQuiz(review1: any[], wordIndex: number) {
   recognition.start();
 };
 
-function handleRecallSuccess() {
-  (window as any).lastHeard = "Correct!"; // Show it briefly? Or just success
+function handleRecallSuccess(transcript?: string) {
+  (window as any).lastHeard = transcript ? `Correct! You said: "${transcript}"` : "Correct!"; 
   (window as any).confetti({ particleCount: 30 });
       
   const { review2 } = getDailyWords(state);
@@ -799,6 +889,13 @@ function getRecallHintText(word: any) {
 
 (window as any).isMasteryListening = false;
 (window as any).lastMasteryHeard = null;
+(window as any).hasOpenedExamples = false;
+
+(window as any).handleSentenceExampleClick = (word: string) => {
+    window.open(`https://www.google.com/search?q=造句+简单+${word}`, '_blank');
+    (window as any).hasOpenedExamples = true;
+    render();
+};
 
 (window as any).finishSentenceCreation = () => {
     (window as any).masteryStep = 2;
@@ -927,6 +1024,7 @@ function startNextMasteryQuiz() {
     setTimeout(() => {
        // Transition to Step 1 (Sentence)
        (window as any).masteryStep = 1;
+       (window as any).hasOpenedExamples = false;
        render();
     }, 1000);
     return;
@@ -958,6 +1056,7 @@ function startNextMasteryQuiz() {
   const nextIndex = ((window as any).masteryIndex || 0) + 1;
   (window as any).masteryStep = 0;
   (window as any).isMasteryMalayRevealed = false;
+  (window as any).hasOpenedExamples = false;
   
   (window as any).isMasteryListening = false;
   (window as any).lastMasteryHeard = null;
@@ -965,6 +1064,12 @@ function startNextMasteryQuiz() {
   if (nextIndex >= review3.length) {
     (window as any).masteryIndex = 0;
     window.completeModule(3);
+    
+    // Auto navigate to Library for revision
+    setTimeout(() => {
+        window.setModule(4); // 4 is Library
+    }, 1500); 
+
   } else {
     (window as any).masteryIndex = nextIndex;
     render();
