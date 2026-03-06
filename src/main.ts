@@ -139,6 +139,18 @@ function renderMedals(wordCount: number) {
     `);
   }
 
+  if (wordCount >= 50) {
+     medals.push(`
+      <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-150">
+        <div class="w-12 h-12 rounded-full bg-cyan-100 border-2 border-cyan-300 flex items-center justify-center text-xl shadow-md text-cyan-700 font-black relative" title="50 Words">
+          <span>50</span>
+          <div class="absolute -bottom-1 -right-1 text-xs">🥉⭐⭐</div>
+        </div>
+        <span class="text-[10px] font-bold text-cyan-500 mt-1 uppercase tracking-wider">Bronze++</span>
+      </div>
+    `);
+  }
+
   if (wordCount >= 100) {
      medals.push(`
       <div class="flex flex-col items-center animate-in zoom-in duration-500 delay-200">
@@ -211,14 +223,15 @@ function renderMedals(wordCount: number) {
 
 function renderModuleTabs() {
   const modules = [
+    { name: 'Library', icon: '📚' },
     { name: 'Discovery', icon: '🔍' },
     { name: 'Structure', icon: '✍️' },
     { name: 'Recall', icon: '🧠' },
     { name: 'Mastery', icon: '🏆' }
   ];
 
-  if (state.currentStudyDay >= 15) {
-    modules.push({ name: 'Library', icon: '📚' });
+  if (state.currentStudyDay < 15) {
+    modules.shift(); // Remove Library if not unlocked
   }
 
   return `
@@ -227,11 +240,11 @@ function renderModuleTabs() {
         <button 
           class="flex-1 min-w-[100px] flex flex-col items-center gap-1 p-3 rounded-2xl transition-all ${currentModuleIndex === i ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-white text-slate-500 border border-slate-100'}"
           onclick="window.setModule(${i})"
-          ${(i < 4 && i > 0 && !state.completedModules[i-1]) ? 'disabled opacity-50' : ''}
+          ${(m.name !== 'Library' && m.name !== 'Discovery' && !state.completedModules[i === 0 ? 0 : (state.currentStudyDay >= 15 ? i - 2 : i - 1)]) ? 'disabled opacity-50' : ''}
         >
           <span class="text-xl">${m.icon}</span>
           <span class="text-xs font-bold uppercase tracking-tighter">${m.name}</span>
-          ${(i < 4 && state.completedModules[i]) ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
+          ${(m.name !== 'Library' && state.completedModules[state.currentStudyDay >= 15 ? i - 1 : i]) ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
         </button>
       `).join('')}
     </div>
@@ -534,8 +547,8 @@ function renderLibrary() {
         </div>
       ` : `
         <div class="grid gap-3">
-          ${masteredWords.map((w) => `
-            <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-100 hover:shadow-md transition-all">
+          ${masteredWords.map((w, idx) => `
+            <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-100 hover:shadow-md transition-all ${idx < state.pace ? 'animate-in fade-in slide-in-from-top-4 duration-1000' : ''}">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg text-xl font-bold text-indigo-700">
                   ${w.cn}
@@ -597,12 +610,7 @@ function renderSettings() {
 }
 
 function renderFinishDay() {
-  const allDone = state.completedModules.every((completed, index) => {
-    // Only check first 4 modules (Discovery, Structure, Recall, Mastery)
-    // Library (index 4) doesn't need to be completed
-    if (index >= 4) return true;
-    return completed;
-  });
+  const allDone = state.completedModules.every(Boolean);
   
   if (!allDone) return '';
 
@@ -618,17 +626,24 @@ function renderFinishDay() {
 // --- Main Render Loop ---
 
 function render() {
-  // If we are on the Library tab (index 4) but logic doesn't support it (e.g. day < 15), reset to 0
-  if (currentModuleIndex === 4 && state.currentStudyDay < 15) {
-    currentModuleIndex = 0;
+  // If we are on the Library tab but logic doesn't support it (e.g. day < 15), reset to Discovery
+  if (state.currentStudyDay < 15 && currentModuleIndex === 0) {
+    // It's not unlocked, but currentModule=0 would normally be Discovery.
+    // However, if Day >=15, 0 = Library, 1 = Discovery.
+    // So if Day <15, 0 = Discovery. No change needed here.
   }
 
-  const moduleRenderers = [
+  const moduleRenderers = state.currentStudyDay >= 15 ? [
+    renderLibrary,
     renderDiscovery, 
     renderStructure, 
     renderRecall, 
-    renderMastery,
-    renderLibrary
+    renderMastery
+  ] : [
+    renderDiscovery, 
+    renderStructure, 
+    renderRecall, 
+    renderMastery
   ];
 
   app.innerHTML = `
@@ -641,23 +656,42 @@ function render() {
     ${renderSettings()}
   `;
 
-  if (currentModuleIndex === 1) initHanziWriter();
-  if (currentModuleIndex === 3) initMasteryWriter();
+  // Determine correct module indexes for initialization
+  const structureIdx = state.currentStudyDay >= 15 ? 2 : 1;
+  const masteryIdx = state.currentStudyDay >= 15 ? 4 : 3;
+
+  if (currentModuleIndex === structureIdx) initHanziWriter();
+  if (currentModuleIndex === masteryIdx) initMasteryWriter();
   setupLongPress();
 }
 
 // --- Logic & Handlers ---
 
 (window as any).setModule = (index: number) => {
-  // Library (index 4) is always accessible if visible, no dependency on previous modules
-  if (index < 4 && index > 0 && !state.completedModules[index-1]) return;
+  const isLibraryUnlocked = state.currentStudyDay >= 15;
+  const isLibraryModule = isLibraryUnlocked && index === 0;
+  const isDiscoveryModule = (isLibraryUnlocked && index === 1) || (!isLibraryUnlocked && index === 0);
+
+  // Allow access to Library and Discovery always.
+  // For others, check if previous module is completed.
+  if (!isLibraryModule && !isDiscoveryModule) {
+      const completionIndex = isLibraryUnlocked ? index - 1 : index; 
+      // Example: If Library is unlocked:
+      // Index 2 (Structure) requires completedModules[0] (Discovery)
+      if (completionIndex > 0 && !state.completedModules[completionIndex - 1]) {
+          return;
+      }
+  }
   
   currentModuleIndex = index;
   render();
 };
 
 (window as any).completeModule = (index: number) => {
-  state.completedModules[index] = true;
+  const isLibraryUnlocked = state.currentStudyDay >= 15;
+  const logicalIndex = isLibraryUnlocked && index > 0 ? index - 1 : index;
+
+  state.completedModules[logicalIndex] = true;
   saveState(state);
   (window as any).confetti({
     particleCount: 100,
@@ -666,7 +700,7 @@ function render() {
   });
   
   // Auto advance if possible
-  if (index < 3) {
+  if (logicalIndex < 3) {
     currentModuleIndex = index + 1;
   }
   render();
@@ -951,9 +985,21 @@ function getRecallHintText(word: any) {
            (window as any).lastMasteryHeard = "Correct! 🎉";
            (window as any).confetti({ particleCount: 30, origin: { y: 0.7 } });
            
-           // Transition to Step 3 (Next Word)
-           (window as any).masteryStep = 3;
-           render(); 
+           // Check if it's the last word!
+           const { review3 } = getDailyWords(state);
+           const nextIndex = ((window as any).masteryIndex || 0) + 1;
+           
+           if (nextIndex >= review3.length) {
+              // It was the last word of the day! Auto-finish day to library!
+              setTimeout(() => {
+                 (window as any).masteryIndex = 0;
+                 (window as any).finishDay(true);
+              }, 1500); // Wait a bit for the confetti
+           } else {
+              // Not the last word. Transition to Step 3 (Next Word)
+              (window as any).masteryStep = 3;
+              render(); 
+           }
            return;
         }
   
@@ -1063,14 +1109,13 @@ function startNextMasteryQuiz() {
 
   if (nextIndex >= review3.length) {
     (window as any).masteryIndex = 0;
-    window.completeModule(3);
     
-    // Auto navigate to Library for revision
-    setTimeout(() => {
-        window.setModule(4); // 4 is Library
-    }, 1500); 
+    // Automatically finish the day completely since mastery is done
+    (window as any).finishDay(true);
 
   } else {
+    // Should generally not hit this block anymore since the speech recognition handler branches early, 
+    // but just in case for fallback
     (window as any).masteryIndex = nextIndex;
     render();
   }
@@ -1116,18 +1161,25 @@ function startNextMasteryQuiz() {
   }
 };
 
-(window as any).finishDay = () => {
+(window as any).finishDay = (autoShowLibrary: boolean = false) => {
   state.currentStudyDay++;
   state.completedModules = [false, false, false, false];
   (window as any).clickedWords = {};
   (window as any).discoveryClicks = 0;
   saveState(state);
-  currentModuleIndex = 0;
+  
+  if (autoShowLibrary && state.currentStudyDay >= 15) {
+      currentModuleIndex = 0; // Library is module 0 now
+  } else {
+      currentModuleIndex = state.currentStudyDay >= 15 ? 1 : 0; // Discovery
+  }
+
   (window as any).confetti({
     particleCount: 200,
     spread: 100,
     origin: { y: 0.3 }
   });
+  
   setTimeout(() => render(), 500);
 };
 
