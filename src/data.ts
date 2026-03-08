@@ -1761,5 +1761,143 @@ export const ALL_WORDS: Word[] = [
   { cn: "市民", en: "Citizen", pinyin: "shì mín", parts: ["市"], bm: "Wargakota", en_pronounce: "ˈsɪt.ɪ.zən", bm_pronounce: "war-ga-ko-ta" },
   { cn: "市中心", en: "City center", pinyin: "shì zhōng xīn", parts: ["市"], bm: "Pusat bandar", en_pronounce: "ˈsɪt.i ˈsɛn.tər", bm_pronounce: "pu-sat ban-dar" },
 
-  // Total groups: 250
+  // Root: 刀 (Knife)
+  { cn: "小刀", en: "Small knife", pinyin: "xiǎo dāo", parts: ["刀"], bm: "Pisau kecil", en_pronounce: "smɔːl naɪf", bm_pronounce: "pi-sau ke-cil" },
+  { cn: "剪刀", en: "Scissors", pinyin: "jiǎn dāo", parts: ["刀"], bm: "Gunting", en_pronounce: "ˈsɪz.əz", bm_pronounce: "gun-ting" },
+  { cn: "菜刀", en: "Kitchen knife", pinyin: "cài dāo", parts: ["刀"], bm: "Pisau dapur", en_pronounce: "ˈkɪtʃ.ɪn naɪf", bm_pronounce: "pi-sau da-pur" },
+  { cn: "剃刀", en: "Razor", pinyin: "tì dāo", parts: ["刀"], bm: "Pisau cukur", en_pronounce: "ˈreɪ.zər", bm_pronounce: "pi-sau cu-kur" },
+  { cn: "刀片", en: "Blade", pinyin: "dāo piàn", parts: ["刀"], bm: "Bilah", en_pronounce: "bleɪd", bm_pronounce: "bi-lah" },
+
+  // Root: 竹 (Bamboo)
+  { cn: "竹子", en: "Bamboo", pinyin: "zhú zi", parts: ["竹"], bm: "Buluh", en_pronounce: "bæmˈbuː", bm_pronounce: "bu-luh" },
+  { cn: "竹林", en: "Bamboo forest", pinyin: "zhú lín", parts: ["竹"], bm: "Hutan buluh", en_pronounce: "bæmˈbuː ˈfɒr.ɪst", bm_pronounce: "hu-tan bu-luh" },
+  { cn: "竹叶", en: "Bamboo leaf", pinyin: "zhú yè", parts: ["竹"], bm: "Daun buluh", en_pronounce: "bæmˈbuː liːf", bm_pronounce: "da-un bu-luh" },
+  { cn: "爆竹", en: "Firecracker", pinyin: "bào zhú", parts: ["竹"], bm: "Mercun", en_pronounce: "ˈfaɪə.kræk.ər", bm_pronounce: "mer-cun" },
+  { cn: "竹笋", en: "Bamboo shoot", pinyin: "zhú sǔn", parts: ["竹"], bm: "Rebung", en_pronounce: "bæmˈbuː ʃuːt", bm_pronounce: "re-bung" },
+
+  // Root: 米 (Rice)
+  { cn: "大米", en: "Rice (grain)", pinyin: "dà mǐ", parts: ["米"], bm: "Beras", en_pronounce: "raɪs", bm_pronounce: "be-ras" },
+  { cn: "米粉", en: "Rice noodles", pinyin: "mǐ fěn", parts: ["米"], bm: "Bihun", en_pronounce: "raɪs ˈnuː.dəlz", bm_pronounce: "bi-hun" },
+  { cn: "玉米", en: "Corn", pinyin: "yù mǐ", parts: ["米"], bm: "Jagung", en_pronounce: "kɔːn", bm_pronounce: "ja-gung" },
+  { cn: "厘米", en: "Centimeter", pinyin: "lí mǐ", parts: ["米"], bm: "Sentimeter", en_pronounce: "ˈsɛn.tɪˌmiː.tər", bm_pronounce: "sen-ti-me-ter" },
+  { cn: "花生米", en: "Peanut kernel", pinyin: "huā shēng mǐ", parts: ["米"], bm: "Isi kacang tanah", en_pronounce: "ˈpiː.nʌt ˈkɜː.nəl", bm_pronounce: "i-si ka-cang ta-nah" },
+
+  // Root: 瓜 (Melon)
+  { cn: "苦瓜", en: "Bitter gourd", pinyin: "kǔ guā", parts: ["瓜"], bm: "Peria", en_pronounce: "ˈbɪt.ər ɡʊəd", bm_pronounce: "pe-ri-a" },
+  { cn: "黄瓜", en: "Cucumber", pinyin: "huáng guā", parts: ["瓜"], bm: "Timun", en_pronounce: "ˈkjuː.kʌm.bər", bm_pronounce: "ti-mun" },
+  { cn: "冬瓜", en: "Winter melon", pinyin: "dōng guā", parts: ["瓜"], bm: "Kundur", en_pronounce: "ˈwɪn.tər ˈmɛl.ən", bm_pronounce: "kun-dur" },
+  { cn: "傻瓜", en: "Fool", pinyin: "shǎ guā", parts: ["瓜"], bm: "Orang bodoh", en_pronounce: "fuːl", bm_pronounce: "o-rang bo-doh" },
+  { cn: "木瓜", en: "Papaya", pinyin: "mù guā", parts: ["瓜"], bm: "Betik", en_pronounce: "pəˈpaɪ.ə", bm_pronounce: "be-tik" },
+
+  // Root: 豆 (Bean)
+  { cn: "豆子", en: "Bean", pinyin: "dòu zi", parts: ["豆"], bm: "Kacang", en_pronounce: "biːn", bm_pronounce: "ka-cang" },
+  { cn: "黄豆", en: "Soybean", pinyin: "huáng dòu", parts: ["豆"], bm: "Kacang soya", en_pronounce: "ˈsɔɪ.biːn", bm_pronounce: "ka-cang so-ya" },
+  { cn: "绿豆", en: "Mung bean", pinyin: "lǜ dòu", parts: ["豆"], bm: "Kacang hijau", en_pronounce: "mʌŋ biːn", bm_pronounce: "ka-cang hi-jau" },
+  { cn: "红豆", en: "Red bean", pinyin: "hóng dòu", parts: ["豆"], bm: "Kacang merah", en_pronounce: "rɛd biːn", bm_pronounce: "ka-cang me-rah" },
+  { cn: "豆腐", en: "Tofu", pinyin: "dòu fu", parts: ["豆"], bm: "Tauhu", en_pronounce: "ˈtoʊ.fuː", bm_pronounce: "tau-hu" },
+
+  // Root: 龙 (Dragon)
+  { cn: "恐龙", en: "Dinosaur", pinyin: "kǒng lóng", parts: ["龙"], bm: "Dinosaur", en_pronounce: "ˈdaɪ.nə.sɔːr", bm_pronounce: "di-no-saur" },
+  { cn: "飞龙", en: "Flying dragon", pinyin: "fēi lóng", parts: ["龙"], bm: "Naga terbang", en_pronounce: "ˈflaɪ.ɪŋ ˈdræɡ.ən", bm_pronounce: "na-ga ter-bang" },
+  { cn: "龙眼", en: "Longan", pinyin: "lóng yǎn", parts: ["龙"], bm: "Mata kucing", en_pronounce: "ˈlɒŋ.ɡən", bm_pronounce: "ma-ta ku-cing" },
+  { cn: "龙头", en: "Faucet", pinyin: "lóng tóu", parts: ["龙"], bm: "Paip air", en_pronounce: "ˈfɔː.sɪt", bm_pronounce: "pa-ip a-ir" },
+  { cn: "龙舟", en: "Dragon boat", pinyin: "lóng zhōu", parts: ["龙"], bm: "Perahu naga", en_pronounce: "ˈdræɡ.ən boʊt", bm_pronounce: "pe-ra-hu na-ga" },
+
+  // Root: 鬼 (Ghost)
+  { cn: "魔鬼", en: "Devil", pinyin: "mó guǐ", parts: ["鬼"], bm: "Syaitan", en_pronounce: "ˈdɛv.əl", bm_pronounce: "syai-tan" },
+  { cn: "鬼怪", en: "Monster/Ghost", pinyin: "guǐ guài", parts: ["鬼"], bm: "Hantu/Raksasa", en_pronounce: "ˈmɒn.stər", bm_pronounce: "han-tu rak-sa-sa" },
+  { cn: "吸血鬼", en: "Vampire", pinyin: "xī xuè guǐ", parts: ["鬼"], bm: "Vampire", en_pronounce: "ˈvæm.paɪər", bm_pronounce: "vam-pi-re" },
+  { cn: "小鬼", en: "Imp", pinyin: "xiǎo guǐ", parts: ["鬼"], bm: "Hantu kecil/Budak nakal", en_pronounce: "ɪmp", bm_pronounce: "han-tu ke-cil" },
+  { cn: "鬼脸", en: "Funny face", pinyin: "guǐ liǎn", parts: ["鬼"], bm: "Muka kelakar", en_pronounce: "ˈfʌn.i feɪs", bm_pronounce: "mu-ka ke-la-kar" },
+
+  // Root: 角 (Horn/Angle)
+  { cn: "三角", en: "Triangle", pinyin: "sān jiǎo", parts: ["角"], bm: "Segi tiga", en_pronounce: "ˈtraɪ.æŋ.ɡəl", bm_pronounce: "se-gi ti-ga" },
+  { cn: "视角", en: "Perspective", pinyin: "shì jiǎo", parts: ["角"], bm: "Perspektif", en_pronounce: "pəˈspɛk.tɪv", bm_pronounce: "pers-pek-tif" },
+  { cn: "角色", en: "Role", pinyin: "jué sè", parts: ["角"], bm: "Peranan", en_pronounce: "roʊl", bm_pronounce: "pe-ra-nan" },
+  { cn: "角落", en: "Corner", pinyin: "jiǎo luò", parts: ["角"], bm: "Sudut/Penjuru", en_pronounce: "ˈkɔː.nər", bm_pronounce: "su-dut" },
+  { cn: "牛角", en: "Cow horn", pinyin: "niú jiǎo", parts: ["角"], bm: "Tanduk lembu", en_pronounce: "kaʊ hɔːn", bm_pronounce: "tan-duk lem-bu" },
+
+  // Root: 骨 (Bone)
+  { cn: "骨头", en: "Bone", pinyin: "gǔ tou", parts: ["骨"], bm: "Tulang", en_pronounce: "boʊn", bm_pronounce: "tu-lang" },
+  { cn: "排骨", en: "Ribs", pinyin: "pái gǔ", parts: ["骨"], bm: "Tulang rusuk", en_pronounce: "rɪbz", bm_pronounce: "tu-lang ru-suk" },
+  { cn: "骨干", en: "Backbone", pinyin: "gǔ gàn", parts: ["骨"], bm: "Tulang belakang", en_pronounce: "ˈbæk.boʊn", bm_pronounce: "tu-lang be-la-kang" },
+  { cn: "骨折", en: "Bone fracture", pinyin: "gǔ zhé", parts: ["骨"], bm: "Patah tulang", en_pronounce: "boʊn ˈfræk.tʃər", bm_pronounce: "pa-tah tu-lang" },
+  { cn: "刺骨", en: "Piercing cold", pinyin: "cì gǔ", parts: ["骨"], bm: "Sejuk menggigit", en_pronounce: "ˈpɪə.sɪŋ koʊld", bm_pronounce: "se-juk meng-gi-git" },
+
+  // Root: 弓 (Bow)
+  { cn: "弓箭", en: "Bow and arrow", pinyin: "gōng jiàn", parts: ["弓"], bm: "Busur dan anak panah", en_pronounce: "boʊ ənd ˈær.oʊ", bm_pronounce: "bu-sur dan a-nak pa-nah" },
+  { cn: "弹弓", en: "Slingshot", pinyin: "dàn gōng", parts: ["弓"], bm: "Lastik", en_pronounce: "ˈslɪŋ.ʃɒt", bm_pronounce: "las-tik" },
+  { cn: "拉弓", en: "Draw a bow", pinyin: "lā gōng", parts: ["弓"], bm: "Tarik busur", en_pronounce: "drɔː ə boʊ", bm_pronounce: "ta-rik bu-sur" },
+  { cn: "弓弦", en: "Bowstring", pinyin: "gōng xián", parts: ["弓"], bm: "Tali busur", en_pronounce: "ˈboʊ.strɪŋ", bm_pronounce: "ta-li bu-sur" },
+  { cn: "弓形", en: "Arch shape", pinyin: "gōng xíng", parts: ["弓"], bm: "Bentuk melengkung", en_pronounce: "ɑːtʃ ʃeɪp", bm_pronounce: "ben-tuk me-leng-kung" },
+
+  // Root: 船 (Boat)
+  { cn: "小船", en: "Small boat", pinyin: "xiǎo chuán", parts: ["船"], bm: "Perahu kecil", en_pronounce: "smɔːl boʊt", bm_pronounce: "pe-ra-hu ke-cil" },
+  { cn: "轮船", en: "Steamship", pinyin: "lún chuán", parts: ["船"], bm: "Kapal laut", en_pronounce: "ˈstiːm.ʃɪp", bm_pronounce: "ka-pal la-ut" },
+  { cn: "飞船", en: "Spaceship", pinyin: "fēi chuán", parts: ["船"], bm: "Kapal angkasa", en_pronounce: "ˈspeɪs.ʃɪp", bm_pronounce: "ka-pal ang-ka-sa" },
+  { cn: "帆船", en: "Sailboat", pinyin: "fān chuán", parts: ["船"], bm: "Kapal layar", en_pronounce: "ˈseɪl.boʊt", bm_pronounce: "ka-pal la-yar" },
+  { cn: "上船", en: "Board a boat", pinyin: "shàng chuán", parts: ["船"], bm: "Naik kapal", en_pronounce: "bɔːrd ə boʊt", bm_pronounce: "na-ik ka-pal" },
+
+  // Root: 桥 (Bridge)
+  { cn: "大桥", en: "Big bridge", pinyin: "dà qiáo", parts: ["桥"], bm: "Jambatan besar", en_pronounce: "bɪɡ brɪdʒ", bm_pronounce: "jam-ba-tan be-sar" },
+  { cn: "天桥", en: "Overpass", pinyin: "tiān qiáo", parts: ["桥"], bm: "Jejantas", en_pronounce: "ˈoʊ.vər.pæs", bm_pronounce: "je-jan-tas" },
+  { cn: "木桥", en: "Wooden bridge", pinyin: "mù qiáo", parts: ["桥"], bm: "Jambatan kayu", en_pronounce: "ˈwʊd.ən brɪdʒ", bm_pronounce: "jam-ba-tan ka-yu" },
+  { cn: "石桥", en: "Stone bridge", pinyin: "shí qiáo", parts: ["桥"], bm: "Jambatan batu", en_pronounce: "stoʊn brɪdʒ", bm_pronounce: "jam-ba-tan ba-tu" },
+  { cn: "吊桥", en: "Suspension bridge", pinyin: "diào qiáo", parts: ["桥"], bm: "Jambatan gantung", en_pronounce: "səˈspɛn.ʃən brɪdʒ", bm_pronounce: "jam-ba-tan gan-tung" },
+
+  // Root: 医 (Medicine/Doctor)
+  { cn: "医生", en: "Doctor", pinyin: "yī shēng", parts: ["医"], bm: "Doktor", en_pronounce: "ˈdɒk.tər", bm_pronounce: "dok-tor" },
+  { cn: "医院", en: "Hospital", pinyin: "yī yuàn", parts: ["医"], bm: "Hospital", en_pronounce: "ˈhɒs.pɪ.təl", bm_pronounce: "hos-pi-tal" },
+  { cn: "中医", en: "Chinese medicine", pinyin: "zhōng yī", parts: ["医"], bm: "Perubatan tradisional Cina", en_pronounce: "tʃaɪˈniːz ˈmɛd.ɪ.sən", bm_pronounce: "pe-ru-ba-tan tra-di-si-o-nal ci-na" },
+  { cn: "医学", en: "Medical science", pinyin: "yī xué", parts: ["医"], bm: "Sains perubatan", en_pronounce: "ˈmɛd.ɪ.kəl ˈsaɪ.əns", bm_pronounce: "sains pe-ru-ba-tan" },
+  { cn: "名医", en: "Famous doctor", pinyin: "míng yī", parts: ["医"], bm: "Doktor terkenal", en_pronounce: "ˈfeɪ.məs ˈdɒk.tər", bm_pronounce: "dok-tor ter-ke-nal" },
+
+  // Root: 药 (Medicine)
+  { cn: "吃药", en: "Take medicine", pinyin: "chī yào", parts: ["药"], bm: "Makan ubat", en_pronounce: "teɪk ˈmɛd.ɪ.sən", bm_pronounce: "ma-kan u-bat" },
+  { cn: "药水", en: "Liquid medicine", pinyin: "yào shuǐ", parts: ["药"], bm: "Ubat cecair", en_pronounce: "ˈlɪk.wɪd ˈmɛd.ɪ.sən", bm_pronounce: "u-bat ce-ca-ir" },
+  { cn: "药房", en: "Pharmacy", pinyin: "yào fáng", parts: ["药"], bm: "Farmasi", en_pronounce: "ˈfɑːr.mə.si", bm_pronounce: "far-ma-si" },
+  { cn: "药片", en: "Pill", pinyin: "yào piàn", parts: ["药"], bm: "Pil", en_pronounce: "pɪl", bm_pronounce: "pil" },
+  { cn: "毒药", en: "Poison", pinyin: "dú yào", parts: ["药"], bm: "Racun", en_pronounce: "ˈpɔɪ.zən", bm_pronounce: "ra-cun" },
+
+  // Root: 病 (Sick)
+  { cn: "生病", en: "Get sick", pinyin: "shēng bìng", parts: ["病"], bm: "Sakit", en_pronounce: "ɡɛt sɪk", bm_pronounce: "sa-kit" },
+  { cn: "看病", en: "See a doctor", pinyin: "kàn bìng", parts: ["病"], bm: "Berjumpa doktor", en_pronounce: "siː ə ˈdɒk.tər", bm_pronounce: "ber-jum-pa dok-tor" },
+  { cn: "病人", en: "Patient", pinyin: "bìng rén", parts: ["病"], bm: "Pesakit", en_pronounce: "ˈpeɪ.ʃənt", bm_pronounce: "pe-sa-kit" },
+  { cn: "病毒", en: "Virus", pinyin: "bìng dú", parts: ["病"], bm: "Virus", en_pronounce: "ˈvaɪ.rəs", bm_pronounce: "vi-rus" },
+  { cn: "治病", en: "Treat an illness", pinyin: "zhì bìng", parts: ["病"], bm: "Merawat penyakit", en_pronounce: "triːt ən ˈɪl.nəs", bm_pronounce: "me-ra-wat pe-nya-kit" },
+
+  // Root: 店 (Shop/Store)
+  { cn: "商店", en: "Store", pinyin: "shāng diàn", parts: ["店"], bm: "Kedai", en_pronounce: "stɔːr", bm_pronounce: "ke-dai" },
+  { cn: "花店", en: "Flower shop", pinyin: "huā diàn", parts: ["店"], bm: "Kedai bunga", en_pronounce: "ˈflaʊ.ər ʃɒp", bm_pronounce: "ke-dai bu-nga" },
+  { cn: "鞋店", en: "Shoe store", pinyin: "xié diàn", parts: ["店"], bm: "Kedai kasut", en_pronounce: "ʃuː stɔːr", bm_pronounce: "ke-dai ka-sut" },
+  { cn: "酒店", en: "Hotel", pinyin: "jiǔ diàn", parts: ["店"], bm: "Hotel", en_pronounce: "hoʊˈtɛl", bm_pronounce: "ho-tel" },
+  { cn: "店员", en: "Shop assistant", pinyin: "diàn yuán", parts: ["店"], bm: "Pembantu kedai", en_pronounce: "ʃɒp əˈsɪs.tənt", bm_pronounce: "pem-ban-tu ke-dai" },
+
+  // Root: 厂 (Factory)
+  { cn: "工厂", en: "Factory", pinyin: "gōng chǎng", parts: ["厂"], bm: "Kilang", en_pronounce: "ˈfæk.tər.i", bm_pronounce: "ki-lang" },
+  { cn: "厂长", en: "Factory manager", pinyin: "chǎng zhǎng", parts: ["厂"], bm: "Pengurus kilang", en_pronounce: "ˈfæk.tər.i ˈmæn.ɪ.dʒər", bm_pronounce: "pe-ngu-rus ki-lang" },
+  { cn: "铁厂", en: "Ironworks", pinyin: "tiě chǎng", parts: ["厂"], bm: "Kilang besi", en_pronounce: "ˈaɪ.ərn.wɜːrks", bm_pronounce: "ki-lang be-si" },
+  { cn: "药厂", en: "Pharmaceutical factory", pinyin: "yào chǎng", parts: ["厂"], bm: "Kilang ubat", en_pronounce: "fɑːr.məˈsuː.tɪ.kəl ˈfæk.tər.i", bm_pronounce: "ki-lang u-bat" },
+  { cn: "厂房", en: "Factory building", pinyin: "chǎng fáng", parts: ["厂"], bm: "Bangunan kilang", en_pronounce: "ˈfæk.tər.i ˈbɪl.dɪŋ", bm_pronounce: "ba-ngu-nan ki-lang" },
+
+  // Root: 街 (Street)
+  { cn: "上街", en: "Go to the street", pinyin: "shàng jiē", parts: ["街"], bm: "Pergi ke jalan raya", en_pronounce: "ɡoʊ tuː ðə striːt", bm_pronounce: "per-gi ke ja-lan ra-ya" },
+  { cn: "逛街", en: "Window shopping", pinyin: "guàng jiē", parts: ["街"], bm: "Beli-belah", en_pronounce: "ˈwɪn.doʊ ˈʃɒp.ɪŋ", bm_pronounce: "be-li be-lah" },
+  { cn: "街头", en: "Street corner", pinyin: "jiē tóu", parts: ["街"], bm: "Hujung jalan", en_pronounce: "striːt ˈkɔːr.nər", bm_pronounce: "hu-jung ja-lan" },
+  { cn: "老街", en: "Old street", pinyin: "lǎo jiē", parts: ["街"], bm: "Jalan lama", en_pronounce: "oʊld striːt", bm_pronounce: "ja-lan la-ma" },
+  { cn: "街市", en: "Market", pinyin: "jiē shì", parts: ["街"], bm: "Pasar", en_pronounce: "ˈmɑːr.kɪt", bm_pronounce: "pa-sar" },
+
+  // Root: 城 (City/Castle)
+  { cn: "城市", en: "City", pinyin: "chéng shì", parts: ["城"], bm: "Bandar", en_pronounce: "ˈsɪt.i", bm_pronounce: "ban-dar" },
+  { cn: "长城", en: "Great Wall", pinyin: "cháng chéng", parts: ["城"], bm: "Tembok Besar", en_pronounce: "ɡreɪt wɔːl", bm_pronounce: "tem-bok be-sar" },
+  { cn: "进城", en: "Go to town", pinyin: "jìn chéng", parts: ["城"], bm: "Masuk bandar", en_pronounce: "ɡoʊ tuː taʊn", bm_pronounce: "ma-suk ban-dar" },
+  { cn: "城门", en: "City gate", pinyin: "chéng mén", parts: ["城"], bm: "Pintu kota", en_pronounce: "ˈsɪt.i ɡeɪt", bm_pronounce: "pin-tu ko-ta" },
+  { cn: "城堡", en: "Castle", pinyin: "chéng bǎo", parts: ["城"], bm: "Istana", en_pronounce: "ˈkæs.əl", bm_pronounce: "is-ta-na" },
+
+  // Root: 乡 (Village/Township)
+  { cn: "家乡", en: "Hometown", pinyin: "jiā xiāng", parts: ["乡"], bm: "Kampung halaman", en_pronounce: "ˈhoʊm.taʊn", bm_pronounce: "kam-pung ha-la-man" },
+  { cn: "乡村", en: "Village", pinyin: "xiāng cūn", parts: ["乡"], bm: "Kampung", en_pronounce: "ˈvɪl.ɪdʒ", bm_pronounce: "kam-pung" },
+  { cn: "同乡", en: "Fellow townsman", pinyin: "tóng xiāng", parts: ["乡"], bm: "Orang sekampung", en_pronounce: "ˈfɛl.oʊ ˈtaʊnz.mən", bm_pronounce: "o-rang se-kam-pung" },
+  { cn: "乡音", en: "Local accent", pinyin: "xiāng yīn", parts: ["乡"], bm: "Loghat kampung", en_pronounce: "ˈloʊ.kəl ˈæk.sɛnt", bm_pronounce: "lo-ghat kam-pung" },
+  { cn: "异乡", en: "Foreign land", pinyin: "yì xiāng", parts: ["乡"], bm: "Tempat asing", en_pronounce: "ˈfɒr.ɪn lænd", bm_pronounce: "tem-pat a-sing" }
 ];

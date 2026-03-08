@@ -1,3 +1,13 @@
+// expand data.ts 10 roots at a time
+// roots.ts is the master list of roots
+// check previous roots to avoid duplicate
+// update roots.ts to match data.ts
+// if more than number of roots in the group, expand the roots according to the age group
+// 180 roots - 8-9 years old
+// 360 roots - 9-10 years old
+// 600 roots - 10-11 years old
+// 900 roots - 11-12 years old
+// Total groups: 270
 export const roots = [
   '一 (One)',
   '人 (Person)',
@@ -248,5 +258,25 @@ export const roots = [
   '公 (Public/Grandpa)',
   '直 (Straight)',
   '正 (Correct/Upright)',
-  '市 (City/Market)'
+  '市 (City/Market)',
+  '刀 (Knife)',
+  '竹 (Bamboo)',
+  '米 (Rice)',
+  '瓜 (Melon)',
+  '豆 (Bean)',
+  '龙 (Dragon)',
+  '鬼 (Ghost)',
+  '角 (Horn/Angle)',
+  '骨 (Bone)',
+  '弓 (Bow)',
+  '船 (Boat)',
+  '桥 (Bridge)',
+  '医 (Medicine/Doctor)',
+  '药 (Medicine)',
+  '病 (Sick)',
+  '店 (Shop/Store)',
+  '厂 (Factory)',
+  '街 (Street)',
+  '城 (City/Castle)',
+  '乡 (Village/Township)'
 ];
