@@ -49,9 +49,9 @@ declare global {
 
     // Library State
     revealedPinyin: Record<number, boolean>;
-    revealedEnglish: Record<number, boolean>;
+    revealedBm: Record<number, boolean>;
     toggleLibraryPinyin: (index: number) => void;
-    toggleLibraryEnglish: (index: number) => void;
+    toggleLibraryBm: (index: number) => void;
   }
 }
 
@@ -567,13 +567,13 @@ function renderLibrary() {
                 <div class="flex flex-col justify-center">
                   <div 
                     class="font-bold text-lg text-slate-800 cursor-pointer hover:text-indigo-600 transition-colors"
-                    onclick="window.toggleLibraryEnglish(${idx})"
-                    title="Click to reveal English"
+                    onclick="window.toggleLibraryBm(${idx})"
+                    title="Click to reveal BM word"
                   >
-                    ${w.bm || '-'}
-                  </div>
-                  <div class="text-sm font-medium text-slate-500 transition-opacity duration-300 ${(window as any).revealedEnglish?.[idx] ? 'opacity-100' : 'opacity-0'}">
                     ${w.en}
+                  </div>
+                  <div class="text-sm font-medium text-slate-500 transition-opacity duration-300 ${(window as any).revealedBm?.[idx] ? 'opacity-100' : 'opacity-0'}">
+                    ${w.bm || '-'}
                   </div>
                   <div class="text-xs text-indigo-400 font-mono transition-opacity duration-300 ${(window as any).revealedPinyin?.[idx] ? 'opacity-100' : 'opacity-0'}">
                     /${w.pinyin}/
@@ -726,13 +726,13 @@ function render() {
 
 // Library Handlers
 (window as any).revealedPinyin = {};
-(window as any).revealedEnglish = {};
+(window as any).revealedBm = {};
 (window as any).toggleLibraryPinyin = (index: number) => {
   (window as any).revealedPinyin[index] = !(window as any).revealedPinyin[index];
   render();
 };
-(window as any).toggleLibraryEnglish = (index: number) => {
-  (window as any).revealedEnglish[index] = !(window as any).revealedEnglish[index];
+(window as any).toggleLibraryBm = (index: number) => {
+  (window as any).revealedBm[index] = !(window as any).revealedBm[index];
   render();
 };
 
