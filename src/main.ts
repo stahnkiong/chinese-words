@@ -687,9 +687,8 @@ function render() {
   render();
 };
 
-(window as any).completeModule = (index: number) => {
+(window as any).completeModule = (logicalIndex: number) => {
   const isLibraryUnlocked = state.currentStudyDay >= 15;
-  const logicalIndex = isLibraryUnlocked && index > 0 ? index - 1 : index;
 
   state.completedModules[logicalIndex] = true;
   saveState(state);
@@ -701,7 +700,7 @@ function render() {
   
   // Auto advance if possible
   if (logicalIndex < 3) {
-    currentModuleIndex = index + 1;
+    currentModuleIndex = logicalIndex + 1 + (isLibraryUnlocked ? 1 : 0);
   }
   render();
 };
