@@ -2,6 +2,7 @@ import './style.css';
 import { loadState, saveState, getDailyWords, exportState, importState } from './logic';
 import type { AppState } from './logic';
 import { ALL_WORDS } from './data';
+import { pinyin } from 'pinyin-pro';
 
 let state: AppState = loadState();
 let currentModuleIndex = 0;
@@ -45,6 +46,12 @@ declare global {
     // Mastery State
     masteryStep: number; // 0: Write, 1: Sentence, 2: Speak Malay, 3: Next Word
     isMasteryMalayRevealed: boolean;
+
+    // Library State
+    revealedPinyin: Record<number, boolean>;
+    revealedEnglish: Record<number, boolean>;
+    toggleLibraryPinyin: (index: number) => void;
+    toggleLibraryEnglish: (index: number) => void;
   }
 }
 
@@ -550,19 +557,31 @@ function renderLibrary() {
           ${masteredWords.map((w, idx) => `
             <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:border-indigo-100 hover:shadow-md transition-all ${idx < state.pace ? 'animate-in fade-in slide-in-from-top-4 duration-1000' : ''}">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 flex items-center justify-center bg-indigo-50 rounded-lg text-xl font-bold text-indigo-700">
+                <div 
+                  class="w-16 h-16 flex items-center justify-center bg-indigo-50 rounded-lg text-2xl font-bold text-indigo-700 cursor-pointer hover:bg-indigo-100 transition-colors"
+                  onclick="window.toggleLibraryPinyin(${idx})"
+                  title="Click to reveal Pinyin"
+                >
                   ${w.cn}
                 </div>
-                <div>
-                  <div class="font-bold text-slate-800">${w.en}</div>
-                  <div class="text-xs text-slate-400 font-mono">/${w.pinyin}/</div>
+                <div class="flex flex-col justify-center">
+                  <div 
+                    class="font-bold text-lg text-slate-800 cursor-pointer hover:text-indigo-600 transition-colors"
+                    onclick="window.toggleLibraryEnglish(${idx})"
+                    title="Click to reveal English"
+                  >
+                    ${w.bm || '-'}
+                  </div>
+                  <div class="text-sm font-medium text-slate-500 transition-opacity duration-300 ${(window as any).revealedEnglish?.[idx] ? 'opacity-100' : 'opacity-0'}">
+                    ${w.en}
+                  </div>
+                  <div class="text-xs text-indigo-400 font-mono transition-opacity duration-300 ${(window as any).revealedPinyin?.[idx] ? 'opacity-100' : 'opacity-0'}">
+                    /${w.pinyin}/
+                  </div>
                 </div>
               </div>
               
               <div class="flex items-center gap-3">
-                <div class="text-right hidden sm:block">
-                  <div class="text-sm font-bold text-slate-600">${w.bm || '-'}</div>
-                </div>
                 <button 
                   class="p-2 rounded-full bg-slate-50 text-indigo-600 hover:bg-slate-100"
                   onclick="window.playAudio('${w.cn}', 'zh-CN')"
@@ -705,6 +724,18 @@ function render() {
   render();
 };
 
+// Library Handlers
+(window as any).revealedPinyin = {};
+(window as any).revealedEnglish = {};
+(window as any).toggleLibraryPinyin = (index: number) => {
+  (window as any).revealedPinyin[index] = !(window as any).revealedPinyin[index];
+  render();
+};
+(window as any).toggleLibraryEnglish = (index: number) => {
+  (window as any).revealedEnglish[index] = !(window as any).revealedEnglish[index];
+  render();
+};
+
 // Discovery Handlers
 (window as any).clickedWords = {};
 (window as any).discoveryClicks = 0;
@@ -836,8 +867,11 @@ function startNextQuiz(review1: any[], wordIndex: number) {
       
       const transcript = transcriptRaw.replace(/\d/g, (d: string) => digitMap[d] || d);
 
-      // Simple matching (ignore punctuation) - Immediate stop on success
-      if (transcript.includes(correct)) {
+      const normCorrectPinyin = pinyin(correct, { toneType: 'none', type: 'string' }).replace(/\s+/g, '').toLowerCase();
+      const normTranscriptPinyin = pinyin(transcript, { toneType: 'none', type: 'string' }).replace(/\s+/g, '').toLowerCase();
+
+      // Verify if pinyin is correct OR if the transcript includes the correct characters
+      if (normTranscriptPinyin.includes(normCorrectPinyin) || transcript.includes(correct)) {
          recognition.stop(); 
          handleRecallSuccess(transcript);
          return;
