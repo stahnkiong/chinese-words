@@ -1014,6 +1014,9 @@ function getRecallHintText(word: any) {
         const normCorrect = normalize(correct);
   
         if (normTranscript.includes(normCorrect) || normCorrect.includes(normTranscript)) {
+           if (!(window as any).isMasteryListening) return; // Already matched
+           (window as any).isMasteryListening = false; // Mark matched immediately
+           
            recognition.stop(); 
            (window as any).lastMasteryHeard = "Correct! 🎉";
            (window as any).confetti({ particleCount: 30, origin: { y: 0.7 } });
@@ -1141,14 +1144,10 @@ function startNextMasteryQuiz() {
   (window as any).lastMasteryHeard = null;
 
   if (nextIndex >= review3.length) {
+    // This case is now mostly handled by toggleMasterySpeechRecognition
     (window as any).masteryIndex = 0;
-    
-    // Automatically finish the day completely since mastery is done
     (window as any).finishDay(true);
-
   } else {
-    // Should generally not hit this block anymore since the speech recognition handler branches early, 
-    // but just in case for fallback
     (window as any).masteryIndex = nextIndex;
     render();
   }
