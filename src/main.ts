@@ -1,5 +1,5 @@
 import './style.css';
-import { loadState, saveState, getDailyWords, exportState, importState, TOTAL_WORDS, getEffectiveStudyDay } from './logic';
+import { loadState, saveState, getDailyWords, exportState, importState, getEffectiveStudyDay, getMasteredCount, getLibraryWords } from './logic';
 import type { AppState } from './logic';
 import { pinyin } from 'pinyin-pro';
 
@@ -94,9 +94,11 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 // --- UI Components ---
 
 function renderHeader() {
-  const progress = (getDay() / 365) * 100;
-  // Calculate mastered words based on Library availability (Day 15 onwards)
-  const totalWords = Math.max(0, (getDay() - 15) * state.pace);
+  const effectiveDay = getDay();
+  const progress = (effectiveDay / 365) * 100;
+  const totalWords = getMasteredCount(state);
+  const displayDay = state.isDataV2Mode ? (state.v2StudyDay || 0) + 1 : state.currentStudyDay + 1;
+  const v2Suffix = state.isDataV2Mode ? ' (V2)' : '';
   
   return `
     <header class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center mb-8 select-none" id="main-header">
@@ -105,7 +107,7 @@ function renderHeader() {
         <h1 class="text-xl font-bold tracking-tight">Scholar's Path</h1>
       </div>
       <div class="flex flex-col items-end">
-        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Day ${getDay() + 1}</span>
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Day ${displayDay}${v2Suffix}</span>
         <div class="w-32 h-2 bg-slate-200 rounded-full mt-1 overflow-hidden">
           <div class="h-full bg-indigo-600 transition-all duration-500" style="width: ${progress}%"></div>
         </div>
@@ -539,8 +541,7 @@ function renderMastery() {
 }
 
 function renderLibrary() {
-  const masteredCount = Math.max(0, (getDay() - 15) * state.pace);
-  const masteredWords = TOTAL_WORDS.slice(0, masteredCount).reverse();
+  const masteredWords = getLibraryWords(state);
 
   return `
     <div class="card max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">

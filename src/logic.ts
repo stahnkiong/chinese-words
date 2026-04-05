@@ -46,21 +46,36 @@ export function getEffectiveStudyDay(state: AppState): number {
 }
 
 export function getDailyWords(state: AppState) {
-  const { pace } = state;
-  const effectiveDay = getEffectiveStudyDay(state);
+  const { pace, isDataV2Mode, v2StudyDay, currentStudyDay } = state;
   
-  const getWordsForDay = (day: number) => {
-    if (day < 0) return [];
-    const start = day * pace;
+  const getWordsForDay = (targetDay: number) => {
+    if (targetDay < 0) return [];
+    const start = (isDataV2Mode ? ALL_WORDS.length : 0) + (targetDay * pace);
     return TOTAL_WORDS.slice(start, start + pace);
   };
 
+  const day = isDataV2Mode ? (v2StudyDay || 0) : currentStudyDay;
+
   return {
-    newWords: getWordsForDay(effectiveDay),
-    review1: getWordsForDay(effectiveDay - 2),
-    review2: getWordsForDay(effectiveDay - 7),
-    review3: getWordsForDay(effectiveDay - 15),
+    newWords: getWordsForDay(day),
+    review1: getWordsForDay(day - 2),
+    review2: getWordsForDay(day - 7),
+    review3: getWordsForDay(day - 15),
   };
+}
+
+export function getMasteredCount(state: AppState): number {
+  const { pace, isDataV2Mode, v2StudyDay, currentStudyDay } = state;
+  if (isDataV2Mode) {
+    // All V1 words + progress in V2 (delayed by 15 days for mastery)
+    return ALL_WORDS.length + Math.max(0, ((v2StudyDay || 0) - 15) * pace);
+  }
+  return Math.max(0, (currentStudyDay - 15) * pace);
+}
+
+export function getLibraryWords(state: AppState) {
+  const count = getMasteredCount(state);
+  return TOTAL_WORDS.slice(0, count).reverse();
 }
 
 export function exportState(state: AppState): string {
