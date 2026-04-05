@@ -3,10 +3,10 @@
 // check previous roots to avoid duplicate
 // update roots.ts to match data.ts
 // if more than number of roots in the group, expand the roots according to the age group
-// 180 roots - 8-9 years old
-// 360 roots - 9-10 years old
-// 600 roots - 10-11 years old
-// 900 roots - 11-12 years old
+// 120 roots - 6-7 years old
+// 300 roots - 7-8 years old
+// 480 roots - 8-9 years old
+// 600 roots - 9-10 years old
 // Total groups: 270
 export const roots = [
   '一 (One)',

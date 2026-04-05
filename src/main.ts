@@ -1,11 +1,11 @@
 import './style.css';
-import { loadState, saveState, getDailyWords, exportState, importState } from './logic';
+import { loadState, saveState, getDailyWords, exportState, importState, TOTAL_WORDS, getEffectiveStudyDay } from './logic';
 import type { AppState } from './logic';
-import { ALL_WORDS } from './data';
 import { pinyin } from 'pinyin-pro';
 
 let state: AppState = loadState();
 let currentModuleIndex = 0;
+const getDay = () => getEffectiveStudyDay(state);
 
 declare global {
   interface Window {
@@ -94,9 +94,9 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 // --- UI Components ---
 
 function renderHeader() {
-  const progress = (state.currentStudyDay / 365) * 100;
+  const progress = (getDay() / 365) * 100;
   // Calculate mastered words based on Library availability (Day 15 onwards)
-  const totalWords = Math.max(0, (state.currentStudyDay - 15) * state.pace);
+  const totalWords = Math.max(0, (getDay() - 15) * state.pace);
   
   return `
     <header class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center mb-8 select-none" id="main-header">
@@ -105,7 +105,7 @@ function renderHeader() {
         <h1 class="text-xl font-bold tracking-tight">Scholar's Path</h1>
       </div>
       <div class="flex flex-col items-end">
-        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Day ${state.currentStudyDay + 1}</span>
+        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Day ${getDay() + 1}</span>
         <div class="w-32 h-2 bg-slate-200 rounded-full mt-1 overflow-hidden">
           <div class="h-full bg-indigo-600 transition-all duration-500" style="width: ${progress}%"></div>
         </div>
@@ -237,7 +237,7 @@ function renderModuleTabs() {
     { name: 'Mastery', icon: '🏆' }
   ];
 
-  if (state.currentStudyDay < 15) {
+  if (getDay() < 15) {
     modules.shift(); // Remove Library if not unlocked
   }
 
@@ -247,11 +247,11 @@ function renderModuleTabs() {
         <button 
           class="flex-1 min-w-[100px] flex flex-col items-center gap-1 p-3 rounded-2xl transition-all ${currentModuleIndex === i ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'bg-white text-slate-500 border border-slate-100'}"
           onclick="window.setModule(${i})"
-          ${(m.name !== 'Library' && m.name !== 'Discovery' && !state.completedModules[i === 0 ? 0 : (state.currentStudyDay >= 15 ? i - 2 : i - 1)]) ? 'disabled opacity-50' : ''}
+          ${(m.name !== 'Library' && m.name !== 'Discovery' && !state.completedModules[i === 0 ? 0 : (getDay() >= 15 ? i - 2 : i - 1)]) ? 'disabled opacity-50' : ''}
         >
           <span class="text-xl">${m.icon}</span>
           <span class="text-xs font-bold uppercase tracking-tighter">${m.name}</span>
-          ${(m.name !== 'Library' && state.completedModules[state.currentStudyDay >= 15 ? i - 1 : i]) ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
+          ${(m.name !== 'Library' && state.completedModules[getDay() >= 15 ? i - 1 : i]) ? '<span class="absolute top-1 right-1 text-[10px]">✅</span>' : ''}
         </button>
       `).join('')}
     </div>
@@ -539,8 +539,8 @@ function renderMastery() {
 }
 
 function renderLibrary() {
-  const masteredCount = Math.max(0, (state.currentStudyDay - 15) * state.pace);
-  const masteredWords = ALL_WORDS.slice(0, masteredCount).reverse();
+  const masteredCount = Math.max(0, (getDay() - 15) * state.pace);
+  const masteredWords = TOTAL_WORDS.slice(0, masteredCount).reverse();
 
   return `
     <div class="card max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -609,7 +609,13 @@ function renderSettings() {
         <div class="space-y-6">
           <div>
             <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-wider">Current Study Day</label>
-            <input type="number" id="setting-day" value="${state.currentStudyDay + 1}" class="w-full p-3 bg-slate-100 rounded-xl font-bold" />
+            <input type="number" id="setting-day" value="${(state.isDataV2Mode ? (state.v2StudyDay || 0) : state.currentStudyDay) + 1}" class="w-full p-3 bg-slate-100 rounded-xl font-bold" />
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-500 mb-2 uppercase tracking-wider">
+              <input type="checkbox" id="setting-v2-mode" ${state.isDataV2Mode ? 'checked' : ''} class="mr-2" />
+              Dad Mode (Data02 Skipping)
+            </label>
           </div>
           
           <div>
@@ -636,7 +642,7 @@ function renderFinishDay() {
   return `
     <div class="max-w-2xl mx-auto px-6 mt-12 pb-20">
       <button class="w-full py-6 bg-green-500 text-white rounded-3xl font-bold text-2xl shadow-xl shadow-green-100 animate-bounce" onclick="window.finishDay()">
-        FINISH DAY ${state.currentStudyDay + 1} 🚀
+        FINISH DAY ${getDay() + 1} 🚀
       </button>
     </div>
   `;
@@ -646,13 +652,13 @@ function renderFinishDay() {
 
 function render() {
   // If we are on the Library tab but logic doesn't support it (e.g. day < 15), reset to Discovery
-  if (state.currentStudyDay < 15 && currentModuleIndex === 0) {
+  if (getDay() < 15 && currentModuleIndex === 0) {
     // It's not unlocked, but currentModule=0 would normally be Discovery.
     // However, if Day >=15, 0 = Library, 1 = Discovery.
     // So if Day <15, 0 = Discovery. No change needed here.
   }
 
-  const moduleRenderers = state.currentStudyDay >= 15 ? [
+  const moduleRenderers = getDay() >= 15 ? [
     renderLibrary,
     renderDiscovery, 
     renderStructure, 
@@ -676,8 +682,8 @@ function render() {
   `;
 
   // Determine correct module indexes for initialization
-  const structureIdx = state.currentStudyDay >= 15 ? 2 : 1;
-  const masteryIdx = state.currentStudyDay >= 15 ? 4 : 3;
+  const structureIdx = getDay() >= 15 ? 2 : 1;
+  const masteryIdx = getDay() >= 15 ? 4 : 3;
 
   if (currentModuleIndex === structureIdx) initHanziWriter();
   if (currentModuleIndex === masteryIdx) initMasteryWriter();
@@ -687,7 +693,7 @@ function render() {
 // --- Logic & Handlers ---
 
 (window as any).setModule = (index: number) => {
-  const isLibraryUnlocked = state.currentStudyDay >= 15;
+  const isLibraryUnlocked = getDay() >= 15;
   const isLibraryModule = isLibraryUnlocked && index === 0;
   const isDiscoveryModule = (isLibraryUnlocked && index === 1) || (!isLibraryUnlocked && index === 0);
 
@@ -707,7 +713,7 @@ function render() {
 };
 
 (window as any).completeModule = (logicalIndex: number) => {
-  const isLibraryUnlocked = state.currentStudyDay >= 15;
+  const isLibraryUnlocked = getDay() >= 15;
 
   state.completedModules[logicalIndex] = true;
   saveState(state);
@@ -1166,7 +1172,14 @@ function startNextMasteryQuiz() {
   const day = parseInt((document.getElementById('setting-day') as HTMLInputElement).value) - 1;
   const pace = parseInt((document.getElementById('setting-pace') as HTMLInputElement).value);
   
-  state.currentStudyDay = day;
+  const isV2 = (document.getElementById('setting-v2-mode') as HTMLInputElement).checked;
+  if (isV2) {
+    state.isDataV2Mode = true;
+    state.v2StudyDay = day;
+  } else {
+    state.isDataV2Mode = false;
+    state.currentStudyDay = day;
+  }
   state.pace = pace;
   state.completedModules = [false, false, false, false];
   saveState(state);
@@ -1194,16 +1207,20 @@ function startNextMasteryQuiz() {
 };
 
 (window as any).finishDay = (autoShowLibrary: boolean = false) => {
-  state.currentStudyDay++;
+  if (state.isDataV2Mode) {
+    state.v2StudyDay = (state.v2StudyDay || 0) + 1;
+  } else {
+    state.currentStudyDay++;
+  }
   state.completedModules = [false, false, false, false];
   (window as any).clickedWords = {};
   (window as any).discoveryClicks = 0;
   saveState(state);
   
-  if (autoShowLibrary && state.currentStudyDay >= 15) {
+  if (autoShowLibrary && getDay() >= 15) {
       currentModuleIndex = 0; // Library is module 0 now
   } else {
-      currentModuleIndex = state.currentStudyDay >= 15 ? 1 : 0; // Discovery
+      currentModuleIndex = getDay() >= 15 ? 1 : 0; // Discovery
   }
 
   (window as any).confetti({
